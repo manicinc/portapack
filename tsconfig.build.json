@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",  // Inherit from tsconfig.json
+    "compilerOptions": {
+      "noEmit": false,             // Ensure files are emitted
+      "declaration": true,         // Generate type declaration files
+      "emitDeclarationOnly": true, // Only generate .d.ts files
+      "outDir": "dist/types"       // Output directory for declaration files
+    },
+    "include": ["src/**/*"]         // Include all TypeScript files in src
+  }
+  

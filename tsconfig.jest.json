@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext", // Recommended for Jest ESM
+    "moduleResolution": "NodeNext", // Recommended for Jest ESM
+    "isolatedModules": true, // Addresses ts-jest warning
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "noEmit": true, // Jest/ts-jest handles output
+    // Ensure target/lib/strict etc. are compatible with your code
+    "target": "ES2022",
+    "lib": ["es2022", "dom"]
+  },
+  "include": ["src/**/*", "tests/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

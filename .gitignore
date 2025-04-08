@@ -1,0 +1,25 @@
+# Node dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Jest coverage
+coverage/
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment files
+.env
+
+# TypeDoc output
+docs/api/

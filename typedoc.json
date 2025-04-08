@@ -1,0 +1,28 @@
+{
+  "entryPoints": [
+    "src/index.ts", 
+    "src/types.ts", 
+    "src/cli/cli.ts"
+  ],
+  "out": "docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "tsconfig": "tsconfig.json",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "theme": "markdown",
+  "entryPointStrategy": "expand",
+  "exclude": [
+    "**/node_modules/**", 
+    "**/test/**", 
+    "**/tests/**", 
+    "**/dist/**",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ],
+  "sort": ["alphabetical"],
+  "categorizeByGroup": true,
+  "sourceLinkTemplate": "https://github.com/manicinc/portapack/blob/master/{path}#L{line}"
+}
