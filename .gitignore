@@ -23,3 +23,6 @@ coverage/
 
 # TypeDoc output
 docs/api/
+
+
+docs/.vitepress/cache/
