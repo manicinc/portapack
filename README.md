@@ -28,7 +28,7 @@
 | 🎯 **Total Asset Embedding** | Inline CSS, JS, images, and fonts seamlessly |
 | 🧼 **Smart Minification** | Optimize HTML, CSS, and JS for minimal file size |
 | 🌐 **Universal Compatibility** | Works flawlessly with local and remote sites |
-| 🚀 **Blazing Fast** | Lightweight, efficient, zero external dependencies |
+| 🚀 **Blazing Fast** | Lightweight, efficient |
 
 ## 🚀 Quick Start
 
