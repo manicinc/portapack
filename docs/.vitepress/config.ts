@@ -43,7 +43,7 @@ export default defineConfig({
         text: 'Docs', 
         items: [
           { text: 'CLI Reference', link: '/cli' },
-          { text: 'API', link: '/api/' },
+          { text: 'API', link: '/api/README' },
           { text: 'Configuration', link: '/configuration' },
           { text: 'Advanced Usage', link: '/advanced' }
         ]
@@ -53,13 +53,37 @@ export default defineConfig({
     ],
 
     sidebar: {
-      // Existing sidebars remain the same
-      '/getting-started': [ /* ... */ ],
-      '/cli': [ /* ... */ ],
-      '/configuration': [ /* ... */ ],
-      
-      // Dynamically load API sidebar
-      '/api/': buildDocsSidebar()
+      '/api/': buildDocsSidebar(),
+      '/getting-started/': [
+        {
+          text: 'Getting Started',
+          items: [
+            { text: 'Introduction', link: '/getting-started/' },
+            { text: 'Installation', link: '/getting-started/installation' },
+            { text: 'Quick Start', link: '/getting-started/quick-start' }
+          ]
+        }
+      ],
+      '/cli/': [
+        {
+          text: 'CLI Guide',
+          items: [
+            { text: 'Overview', link: '/cli/' },
+            { text: 'Commands', link: '/cli/commands' },
+            { text: 'Options', link: '/cli/options' }
+          ]
+        }
+      ],
+      '/configuration/': [
+        {
+          text: 'Configuration',
+          items: [
+            { text: 'Overview', link: '/configuration/' },
+            { text: 'Options', link: '/configuration/options' },
+            { text: 'Advanced', link: '/configuration/advanced' }
+          ]
+        }
+      ]
     }
   }
 })
