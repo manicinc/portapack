@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 import { buildDocsSidebar } from './sidebar-generator'
 
 export default defineConfig({
+  base: '/portapack/',
   title: 'PortaPack',
   description: 'Bundle & Minify HTML into a Single Portable File',
   appearance: 'dark',
