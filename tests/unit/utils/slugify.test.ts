@@ -1,13 +1,13 @@
-// import { slugify,  sanitizeSlug  } from '../../../src/utils/slugify';
+import { slugify,  sanitizeSlug  } from '../../../src/utils/slugify';
 
 describe('slugify()', () => {
-	// it('should handle typical URLs', () => {
-	// 	expect(slugify('https://site.com/path/page.html')).toBe('path-page');
-	// 	expect(slugify('products/item-1.html')).toBe('products-item-1');
-	// 	expect(slugify(' search?q=test page 2 ')).toBe('search-q-test-page-2');
-	// 	expect(slugify('/path/with/slashes/')).toBe('path-with-slashes');
-	// 	expect(slugify('')).toBe('index');
-	// });
+	it('should handle typical URLs', () => {
+		expect(slugify('https://site.com/path/page.html')).toBe('path-page');
+		expect(slugify('products/item-1.html')).toBe('products-item-1');
+		expect(slugify(' search?q=test page 2 ')).toBe('search-q-test-page-2');
+		expect(slugify('/path/with/slashes/')).toBe('path-with-slashes');
+		expect(slugify('')).toBe('index');
+	});
   it("passesd", () => {
     expect(true).toBe(true);
   }
