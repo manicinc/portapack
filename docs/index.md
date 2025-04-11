@@ -7,7 +7,7 @@ hero:
   text: Bundle any HTML or site into one optimized file.
   tagline: Recursively crawl, embed, and minify all scripts, styles, and images into a single portable .html.
   image:
-    src: /portapack-transparent.png
+    src: https://res.cloudinary.com/dwaypfftw/image/upload/v1744373244/portapack-transparent_qlyfpm.png
     alt: PortaPack Logo
   actions:
     - theme: brand
