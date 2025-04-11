@@ -1,6 +1,6 @@
 {
   "name": "portapack",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "📦 A tool to bundle and minify HTML and all its dependencies into a single portable file.",
   "main": "dist/index.js",
   "module": "dist/index.js",
