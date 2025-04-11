@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/manicinc/portapack/compare/v1.0.1...v1.1.0) (2025-04-11)
+
+
+### Features
+
+* fix tests to 70% loc passing ([f96b105](https://github.com/manicinc/portapack/commit/f96b105e4bb3a767a0f7b75a7866b330be5c558a))
+
 ## [1.0.1](https://github.com/manicinc/portapack/compare/v1.0.0...v1.0.1) (2025-04-11)
 
 
