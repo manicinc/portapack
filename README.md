@@ -259,7 +259,7 @@ const html = bundleMultiPageHTML(pages);
 ## 🤝 Contribute & Support
 
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-Manic_Agency-red?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/manicinc)
-[![Discord](https://img.shields.io/discord/your-discord-invite?style=for-the-badge&logo=discord&logoColor=white&label=Join%20Community&color=5865F2)](https://discord.gg/manicinc)
+[![Discord](https://img.shields.io/discord/your-discord-invite?style=for-the-badge&logo=discord&logoColor=white&label=Join%20Community&color=5865F2)](https://discord.gg/DzNgXdYm)
 
 1. Fork the repo
 2. Create a feature branch
@@ -276,8 +276,8 @@ const html = bundleMultiPageHTML(pages);
 
 ## 🌍 Connect
 
-[![Twitter](https://img.shields.io/twitter/follow/manicagency?style=social)](https://twitter.com/manicinc)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Manic_Agency-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/company/manicinc)
+[![Twitter](https://img.shields.io/twitter/follow/manicagency?style=social)](https://x.com/manicagency)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Manic_Agency-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/company/manic-agency-llc/)
 
 ## 📄 License
 

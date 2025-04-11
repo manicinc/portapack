@@ -101,6 +101,6 @@ Interested in improving PortaPack?
 ## Support
 
 - 🐛 [Report an Issue](https://github.com/manicinc/portapack/issues)
-- 💬 [Community Support](https://discord.gg/manicinc)
+- 💬 [Community Support](https://discord.gg/DzNgXdYm)
 
 Built by [Manic.agency](https://manic.agency)
