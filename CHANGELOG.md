@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/manicinc/portapack/compare/v0.2.0...v0.2.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* rmv prepublishOnly for debug release ([6469768](https://github.com/manicinc/portapack/commit/6469768d6c14bd2ab243acfd5358115b7771f612))
+
 # [0.2.0](https://github.com/manicinc/portapack/compare/v0.1.0...v0.2.0) (2025-04-11)
 
 
