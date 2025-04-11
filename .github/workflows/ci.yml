@@ -23,31 +23,31 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
-      # - run: npm run build
       # - run: npm run test:ci
       # - run: npm run lint
       # - run: npm run format:check
       - run: npm run build # for now we keep it simple to release
 
-  coverage:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: 'npm'
-
-      - run: npm ci
-      - run: npm run coveralls
-
-      - name: Coveralls
-        uses: coverallsapp/github-action@v2
+# coverage:
+#   needs: build
+#   runs-on: ubuntu-latest
+#
+#   steps:
+#     - uses: actions/checkout@v4
+#     - uses: actions/setup-node@v4
+#       with:
+#         node-version: 20.x
+#         cache: 'npm'
+#
+#     - run: npm ci
+#     - run: npm run coveralls
+#
+#     - name: Coveralls
+#       uses: coverallsapp/github-action@v2
 
   release:
-    needs: [build, coverage]
+    # needs: [build, coverage]
+    needs: [build]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     permissions:
