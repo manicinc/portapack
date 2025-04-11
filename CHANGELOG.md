@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/manicinc/portapack/compare/v1.0.0...v1.0.1) (2025-04-11)
+
+
+### Bug Fixes
+
+* update Discord and Twitter links in documentation ([f5f252b](https://github.com/manicinc/portapack/commit/f5f252bfbdc6f94d3d31723ff107e21cdfcab9f7))
+
 # 1.0.0 (2025-04-11)
 
 
