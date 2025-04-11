@@ -1,18 +1,12 @@
 # 📦 PortaPack
 
-<div align="center">
-    <img src="./docs/portapack-transparent.png" alt="PortaPack Logo" style="max-width: 50%; height: auto; margin-bottom: 20px;">
-    
 [![npm version](https://img.shields.io/npm/v/portapack.svg?style=for-the-badge&logo=npm&color=CB3837)](https://www.npmjs.com/package/portapack)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/manicinc/portapack/ci.yml?branch=master&style=for-the-badge&logo=github)](https://github.com/manicinc/portapack/actions)
 [![Coverage Status](https://img.shields.io/coveralls/github/manicinc/portapack?style=for-the-badge&logo=codecov)](https://coveralls.io/github/manicinc/portapack)
-</div>
 
-## 🌟 Introduction
+**PortaPack** bundles your entire website — HTML, CSS, JS, images, and fonts — into one  self-contained HTML file. Perfect for snapshots, demos, testing, and offline apps.
 
-**PortaPack** is a powerful, lightning-fast HTML bundling tool that transforms websites into compact, portable files. Pack entire web experiences into a single, self-contained HTML document with minimal effort.
-
-See our [roadmap]() (coming soon!)
+*Minimal input. Maximal output.*
 
 ## 📚 Documentation
 
@@ -22,267 +16,140 @@ See our [roadmap]() (coming soon!)
 - [💻 API Reference](https://manicinc.github.io/portapack/api/)
 - [🤝 Contributing Guidelines](https://manicinc.github.io/portapack/contributing)
 
-## ✨ Killer Features
-
-| Feature | Description |
-|---------|-------------|
-| 🧩 **Recursive Packing** | Bundle entire websites into a single, portable file |
-| 🎯 **Total Asset Embedding** | Inline CSS, JS, images, and fonts seamlessly |
-| 🧼 **Smart Minification** | Optimize HTML, CSS, and JS for minimal file size |
-| 🌐 **Universal Compatibility** | Works flawlessly with local and remote sites |
-| 🚀 **Blazing Fast** | Lightweight, efficient processing for quick results |
-
 ## 🚀 Quick Start
 
-### Installation
+### 📦 Install
 
 ```bash
-# Global install
+# Global CLI (recommended)
 npm install -g portapack
 
-# Project dependency
-npm install --save-dev portapack
+# OR use npx (no install needed)
+npx portapack ./index.html -o bundle.html
 ```
 
-### Basic Usage
+### 🧰 CLI Options
 
 ```bash
-# Bundle a local HTML file
-portapack ./index.html -o portable.html
-
-# Crawl a remote website
-portapack https://example.com --recursive -o site.html
+portapack [input] [options]
 ```
-
-## 💻 CLI Reference
-
-### Command Syntax
-
-```bash
-portapack [options] [input]
-```
-
-### Core Options
 
 | Option | Description |
 |--------|-------------|
 | `-o, --output <file>` | Output file path |
-| `-m, --minify` | Enable all minification (HTML, CSS, JS) |
-| `--no-minify` | Disable all minification |
-| `-e, --embed-assets` | Embed assets as data URIs (default) |
-| `--no-embed-assets` | Keep asset links relative/absolute |
-| `-b, --base-url <url>` | Base URL for resolving relative links |
-| `-d, --dry-run` | Run without writing output file |
-| `-v, --verbose` | Enable verbose (debug) logging |
+| `-r, --recursive [n]` | Crawl site up to n levels deep |
+| `--max-depth <n>` | Explicit crawl depth |
+| `-m, --minify` | Enable all minification |
+| `--no-minify-*` | Disable html, css, or js minify |
+| `-e, --embed-assets` | Inline all assets (default: true) |
+| `--no-embed-assets` | Leave links as-is |
+| `-b, --base-url <url>` | Override base URL resolution |
+| `-v, --verbose` | Show debug output |
+| `--log-level <lvl>` | Set log level: debug, info, warn, error |
+| `-d, --dry-run` | Run without writing file |
 
-### Minification Options
-
-| Option | Description |
-|--------|-------------|
-| `--no-minify-html` | Disable HTML minification |
-| `--no-minify-css` | Disable CSS minification |
-| `--no-minify-js` | Disable JavaScript minification |
-
-### Recursive Crawling
-
-| Option | Description |
-|--------|-------------|
-| `-r, --recursive [depth]` | Recursively crawl site (default depth: 1) |
-| `--max-depth <n>` | Set maximum depth for recursive crawl |
-
-### Logging
-
-| Option | Description |
-|--------|-------------|
-| `--log-level <level>` | Set logging level: debug, info, warn, error, silent, none |
-
-## 📋 CLI Examples
-
-### Basic Examples
+### 📋 CLI Examples
 
 ```bash
-# Bundle a local HTML file with default settings
+# Basic
 portapack ./index.html
+portapack https://example.com
 
-# Bundle a remote page
-portapack https://example.com -o example.html
+# With output path
+portapack ./page.html -o dist/output.html
 
-# Bundle with verbose logging
-portapack ./index.html -v
+# Full recursive bundle
+portapack https://example.com --recursive 2 -o full.html
+
+# Dev mode (no minify, verbose)
+portapack ./src/index.html --no-minify -v
+
+# Production mode (optimized)
+portapack ./src/index.html -m -o dist/prod.html
+
+# Dry run preview
+portapack ./index.html --dry-run
 ```
 
-### Advanced Options
+## 📦 Node.js API
 
-```bash
-# Disable all minification
-portapack ./index.html --no-minify
+PortaPack is fully usable via code.
 
-# Disable only CSS minification
-portapack ./index.html --no-minify-css
-
-# Customize base URL for asset resolution
-portapack ./index.html --base-url https://cdn.example.com
-
-# Keep external links instead of embedding assets
-portapack ./index.html --no-embed-assets
-```
-
-### Recursive Website Bundling
-
-```bash
-# Recursively bundle a website (default depth: 1)
-portapack https://example.com --recursive
-
-# Set custom crawl depth (3 levels)
-portapack https://example.com --recursive 3
-
-# Alternative depth syntax
-portapack https://example.com --max-depth 3
-
-# Recursive bundle with all options
-portapack https://example.com \
-  --recursive 2 \
-  --base-url https://example.com \
-  --no-minify-js \
-  --log-level debug \
-  -o example-site.html
-```
-
-### Customized Workflow Examples
-
-```bash
-# Development workflow: no minification + verbose logs
-portapack ./dev/index.html --no-minify -v -o ./dev/bundle.html
-
-# Production workflow: full optimization
-portapack ./src/index.html -o ./dist/index.html
-
-# Test run without writing output
-portapack ./index.html --dry-run -v
-
-# Custom logging level
-portapack ./index.html --log-level warn
-```
-
-## 🛠 Node.js API
-
-PortaPack provides a flexible JavaScript/TypeScript API that can be used in your own projects.
-
-### Main Functions
-
-The library exports these primary functions:
-
-| Function | Description |
-|----------|-------------|
-| `generatePortableHTML()` | Bundle a single HTML file or URL with its assets |
-| `generateRecursivePortableHTML()` | Recursively crawl and bundle a website |
-| `fetchAndPackWebPage()` | Fetch and pack a single web page |
-| `bundleMultiPageHTML()` | Bundle multiple HTML pages into a single file |
-
-### Basic API Usage
+### Simple Usage
 
 ```typescript
-import { generatePortableHTML } from 'portapack';
+import { pack } from 'portapack';
 
-// Simple usage with local file
-const result = await generatePortableHTML('./index.html');
-console.log(`Generated HTML: ${result.html.length} bytes`);
-console.log(`Build time: ${result.metadata.buildTimeMs}ms`);
+const result = await pack('./index.html'); // local or URL
+console.log(result.html); // bundled HTML
+```
 
-// Simple usage with remote URL
-const remoteResult = await generatePortableHTML('https://example.com');
+### With Options
+
+```typescript
+import { pack, LogLevel } from 'portapack';
+
+const result = await pack('https://example.com', {
+  minifyCss: true,
+  minifyJs: false,
+  recursive: 2,
+  output: 'site.html',
+  logLevel: LogLevel.INFO
+});
+```
+
+### Save to Disk
+
+```typescript
+import fs from 'fs';
+fs.writeFileSync('output.html', result.html);
 ```
 
 ### Advanced API Usage
 
+You can access individual building blocks too:
+
 ```typescript
-import { 
-  generatePortableHTML, 
+import {
+  generatePortableHTML,
   generateRecursivePortableHTML,
-  LogLevel
+  bundleMultiPageHTML,
+  fetchAndPackWebPage,
 } from 'portapack';
-
-// With full options
-const result = await generatePortableHTML('./index.html', {
-  embedAssets: true,      // Embed assets as data URIs
-  minifyHtml: true,       // Minify HTML
-  minifyCss: true,        // Minify CSS
-  minifyJs: true,         // Minify JavaScript
-  baseUrl: './src',       // Base URL for resolving assets
-  logLevel: LogLevel.INFO // Set logging level
-});
-
-// Save the HTML to a file
-import fs from 'fs';
-fs.writeFileSync('output.html', result.html, 'utf-8');
-
-// Access build metadata
-console.log(`Build Stats:
-  - Input: ${result.metadata.input}
-  - Output Size: ${result.metadata.outputSize} bytes
-  - Assets: ${result.metadata.assetCount}
-  - Build Time: ${result.metadata.buildTimeMs}ms
-`);
 ```
 
-### Recursive Website Crawling
+| Function | Purpose |
+|----------|---------|
+| `generatePortableHTML()` | Bundle a single file or URL |
+| `generateRecursivePortableHTML()` | Crawl & bundle entire site |
+| `fetchAndPackWebPage()` | Just fetch HTML (no asset processing) |
+| `bundleMultiPageHTML()` | Combine multiple HTMLs with router |
 
-```typescript
-import { generateRecursivePortableHTML } from 'portapack';
+## 🧪 Use Cases
 
-// Crawl a website with depth 2
-const result = await generateRecursivePortableHTML(
-  'https://example.com',
-  2,
-  { logLevel: LogLevel.DEBUG }
-);
+- Archive pages for offline use
+- Create demo bundles without a web server
+- Simplify distribution of small apps
+- QA test static assets
+- Embed pages in PDFs or ebooks
+- Analyze asset weight impact
 
-console.log(`Bundled ${result.metadata.pagesBundled} pages`);
+## 🤝 Contribute
+
+```bash
+# Get started
+git clone https://github.com/manicinc/portapack
+cd portapack
+npm install
+npm run dev
 ```
-
-### Multi-page Bundling
-
-```typescript
-import { bundleMultiPageHTML } from 'portapack';
-
-// Define multiple pages to bundle
-const pages = [
-  { url: '/home', html: '<h1>Home</h1>' },
-  { url: '/about', html: '<h1>About</h1>' },
-  { url: '/contact', html: '<h1>Contact</h1>' }
-];
-
-// Bundle into a single HTML with client-side router
-const html = bundleMultiPageHTML(pages);
-```
-
-## 🤝 Contribute & Support
-
-[![GitHub Sponsors](https://img.shields.io/badge/Sponsor-Manic_Agency-red?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sponsors/manicinc)
-[![Discord](https://img.shields.io/discord/your-discord-invite?style=for-the-badge&logo=discord&logoColor=white&label=Join%20Community&color=5865F2)](https://discord.gg/DzNgXdYm)
-
-1. Fork the repo
-2. Create a feature branch
-3. Commit with `npm run commit`
-4. Push & open a PR
 
 ## 📊 Project Health
 
-<!-- | Aspect | Status |
-|--------|--------|
-| **Tests** | [![Coverage](https://img.shields.io/codecov/c/github/manicinc/portapack?style=flat-square)](https://codecov.io/gh/manicinc/portapack) |
-| **Code Quality** | [![Maintainability](https://img.shields.io/codeclimate/maintainability/manicinc/portapack?style=flat-square)](https://codeclimate.com/github/manicinc/portapack) |
-| **Dependencies** | [![Dependencies](https://img.shields.io/librariesio/github/manicinc/portapack?style=flat-square)](https://libraries.io/github/manicinc/portapack) | -->
-
-## 🌍 Connect
-
-[![Twitter](https://img.shields.io/twitter/follow/manicagency?style=social)](https://x.com/manicagency)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Manic_Agency-0A66C2?style=flat-square&logo=linkedin)](https://www.linkedin.com/company/manic-agency-llc/)
+(Metrics auto-generated coming soon)
 
 ## 📄 License
 
-**MIT** — Built by [Manic Agency](https://manicagency.com)
+MIT — Built with ✨ by Manic Agency
 
-<div align="center">
-    <sub>Open Source Empowering Designers and Developers 🖥️</sub>
-</div>
+*Open Source Empowering Designers and Developers 🖥️*

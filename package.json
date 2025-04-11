@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "bin": {
-    "portapack": "./dist/cli/cli-entry.js"
+    "portapack": "./dist/cli/cli-entry.cjs"
   },
   "scripts": {
     "dev": "concurrently --success=all -n BUILD,DOCS,TEST -c green,blue,magenta \"npm run dev:build\" \"npm run dev:docs\" \"npm run dev:test\"",

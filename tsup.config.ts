@@ -1,71 +1,76 @@
 /**
  * @file tsup.config.ts
  * @description
- * Build configuration for tsup bundler.
- * Configures:
- * - Separate CLI and API builds
- * - ESM output for Node.js
- * - TypeScript declaration files for API only
- * - Source maps for debugging
- * - Shebang for CLI binary
+ * Dual build configuration for PortaPack:
+ *
+ * 🔹 CLI Build:
+ *   - CommonJS format (`cjs`) for CLI compatibility with Node/npx
+ *   - .cjs file extension to avoid ESM interpretation issues
+ *   - Shebang (`#!/usr/bin/env node`) for executability
+ *   - No type declarations
+ *
+ * 🔹 API Build:
+ *   - ESModule format (`esm`) for modern module usage
+ *   - Generates type declarations (`.d.ts`)
+ *   - Outputs to dist/ without interfering with CLI
  */
 
 import { defineConfig } from 'tsup';
 
 export default defineConfig([
+  // 🔹 CLI BUILD (CJS + .cjs + shebang)
   {
-    // CLI build configuration
     entry: {
-      'cli-entry': 'src/cli/cli-entry.ts',  // Entry point for CLI binary
+      'cli-entry': 'src/cli/cli-entry.ts',
     },
-    format: ['esm'],
-    target: 'node18',
-    platform: 'node',
-    splitting: false,
-    clean: true,                  // Clean the output directory
-    dts: false,                   // No types for CLI output
-    sourcemap: true,
     outDir: 'dist/cli',
+    format: ['cjs'],                     // ✅ Required for CLI to work with npx
+    platform: 'node',
+    target: 'node18',
+    splitting: false,
+    clean: true,                         // Wipe dist/cli clean on each build
+    dts: false,                          // No types for CLI
+    sourcemap: true,
     banner: {
-      js: '#!/usr/bin/env node',  // Include shebang for CLI executable
+      js: '#!/usr/bin/env node',         // ✅ Required for CLI shebang
     },
-    outExtension({ format }) {
+    outExtension() {
       return {
-        js: '.js',  // Keep .js extension for ESM imports
+        js: '.cjs',                      // ✅ Required: prevents ESM misinterpretation
       };
     },
     esbuildOptions(options) {
-      // Make sure to preserve import.meta.url
+      // Support import.meta in case CLI uses it
       options.supported = {
         ...options.supported,
         'import-meta': true,
       };
     },
   },
+
+  // 🔹 API BUILD (ESM + Types + dist/)
   {
-    // API build configuration
     entry: {
       index: 'src/index.ts',
     },
-    format: ['esm'],
-    target: 'node18',
-    platform: 'node',
-    splitting: false,
-    clean: false,                 // Don't wipe CLI output
-    dts: true,                    // Generate TypeScript declarations
-    sourcemap: true,
     outDir: 'dist',
-    outExtension({ format }) {
+    format: ['esm'],                     // ✅ Modern ESM output for consumers
+    platform: 'node',
+    target: 'node18',
+    splitting: false,
+    clean: false,                        // Don't wipe CLI build!
+    dts: true,                           // ✅ Generate TypeScript declarations
+    sourcemap: true,
+    outExtension() {
       return {
-        js: '.js',  // Keep .js extension for ESM imports
+        js: '.js',
       };
     },
     esbuildOptions(options) {
-      // Make sure to preserve import.meta.url
       options.supported = {
         ...options.supported,
         'import-meta': true,
       };
     },
-  }
+  },
 ]);

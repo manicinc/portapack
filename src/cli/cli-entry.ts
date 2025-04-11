@@ -1,28 +1,28 @@
 /**
  * @file cli-entry.ts
  * @description
- * Node.js entry point for PortaPack CLI (compatible with ESM).
- * 
- * Supports:
- * - Direct execution: `node cli-entry.js`
- * - Programmatic import for testing: `import { startCLI } from './cli-entry'`
+ * Safe Node.js CLI entrypoint for PortaPack, compatible with both ESM and CommonJS output.
  */
 
 import type { CLIResult } from '../types';
 
-/**
- * Starts the CLI by importing and invoking the main CLI logic.
- * 
- * @returns {Promise<CLIResult>} - Exit code and any captured output
- */
 const startCLI = async (): Promise<CLIResult> => {
-  const { main } = await import('./cli.js');
+  const { main } = await import('./cli.js'); // This stays ESM-friendly
   return await main(process.argv);
 };
 
-// If executed directly from the command line, run and exit.
-if (import.meta.url === `file://${process.argv[1]}`) {
-  startCLI().then(({ exitCode }) => process.exit(Number(exitCode))); // Cast exitCode to Number
+// Safe: if this file is the entry point, run the CLI
+if (require.main === module) {
+  startCLI()
+    .then(({ stdout, stderr, exitCode }) => {
+      if (stdout) process.stdout.write(stdout);
+      if (stderr) process.stderr.write(stderr);
+      process.exit(Number(exitCode));
+    })
+    .catch((err) => {
+      console.error('💥 Unhandled CLI error:', err);
+      process.exit(1);
+    });
 }
 
 export { startCLI };
