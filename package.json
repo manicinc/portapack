@@ -1,6 +1,6 @@
 {
   "name": "portapack",
-  "version": "1.2.0",
+  "version": "0.2.0",
   "description": "📦 A tool to bundle and minify HTML and all its dependencies into a single portable file.",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -24,7 +24,6 @@
     "coverage": "jest --coverage && open coverage/lcov-report/index.html",
     "docs:coverage": "npm run test && mkdir -p docs/test-coverage && cp -r coverage/lcov-report/* docs/test-coverage/",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run build",
     "publish:npm": "npm publish",
     "lint": "eslint . --ext .ts,.js",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
