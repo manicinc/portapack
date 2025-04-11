@@ -1,7 +1,7 @@
 # 📦 PortaPack
 
 <div align="center">
-    <img src="./docs/portapack-transparent.png" alt="PortaPack Logo" style="max-width: 100%; height: auto; margin-bottom: 20px;">
+    <img src="./docs/portapack-transparent.png" alt="PortaPack Logo" style="max-width: 50%; height: auto; margin-bottom: 20px;">
     
 [![npm version](https://img.shields.io/npm/v/portapack.svg?style=for-the-badge&logo=npm&color=CB3837)](https://www.npmjs.com/package/portapack)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/manicinc/portapack/ci.yml?branch=master&style=for-the-badge&logo=github)](https://github.com/manicinc/portapack/actions)
