@@ -12,6 +12,8 @@
 
 **PortaPack** is a powerful, lightning-fast HTML bundling tool that transforms websites into compact, portable files. Pack entire web experiences into a single, self-contained HTML document with minimal effort.
 
+See our [roadmap]() (coming soon!)
+
 ## 📚 Documentation
 
 - [📖 Getting Started](https://manicinc.github.io/portapack/getting-started)
