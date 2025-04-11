@@ -531,7 +531,7 @@ describe('🔍 extractAssets() - Round 8! FIGHT!', () => { // Incremented round 
 
     beforeEach(() => {
         // Use desired log level for testing
-        mockLogger = new Logger(LogLevel.DEBUG); // Use DEBUG to see more logs during test runs
+        mockLogger = new Logger(LogLevel.WARN); // Use DEBUG to see more logs during test runs
 
         // Spy on logger methods
         mockLoggerDebugSpy = jest.spyOn(mockLogger, 'debug');

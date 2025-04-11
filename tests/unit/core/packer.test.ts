@@ -79,7 +79,7 @@ describe('📦 HTML Packer - packHTML()', () => {
      * @beforeEach Resets mocks before each test.
      */
     beforeEach(() => {
-        mockLogger = new Logger(LogLevel.DEBUG); // Use DEBUG level for tests
+        mockLogger = new Logger(LogLevel.WARN); // Use DEBUG level for tests
         mockLoggerDebugFn = jest.spyOn(mockLogger, 'debug');
         mockLoggerWarnFn = jest.spyOn(mockLogger, 'warn');
     });
