@@ -1,104 +1,93 @@
-/**
- * @file tests/unit/cli/cli-entry.test.ts
- * @description Unit tests for the main CLI entry point (assuming it calls cli.main).
- * Focuses on argument passing and process exit behavior.
- */
-
+// tests/unit/cli/cli-entry.test.ts
 import type { CLIResult } from '../../../src/types';
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 
-// =================== MOCK SETUP ===================
-const mockMainFunction = jest.fn<(argv: string[]) => Promise<CLIResult>>();
+// --- Mock Setup ---
+// Mock the main function from cli.ts that startCLI calls
+const mockRunCliFn = jest.fn<() => Promise<CLIResult>>();
 
-jest.unstable_mockModule('../../../src/cli/cli', () => ({
-    runCli: mockMainFunction,
-    main: mockMainFunction,
+jest.mock('../../../src/cli/cli', () => ({
+    __esModule: true,
+    runCli: mockRunCliFn,
+    main: mockRunCliFn, // Mock both exports for safety
 }));
 
-// Use SpiedFunction type for the variable declaration
-let exitMock: jest.SpiedFunction<typeof process.exit>;
-const errorLogMock = jest.spyOn(console, 'error').mockImplementation(() => {});
-const logMock = jest.spyOn(console, 'log').mockImplementation(() => {});
-// ====================================================
+// Spy on process methods IF startCLI interacts with them directly
+// NOTE: In the current cli-entry.ts, startCLI *doesn't* directly call exit/write.
+// The if (require.main === module) block does. So spying here might not be needed
+// for testing startCLI's direct behavior, but can be kept if needed for other tests.
+let exitSpy: jest.SpiedFunction<typeof process.exit>;
+let stdoutSpy: jest.SpiedFunction<typeof process.stdout.write>;
+let stderrSpy: jest.SpiedFunction<typeof process.stderr.write>;
+// --- End Mock Setup ---
 
+// Import the function to test *AFTER* mocks
+import { startCLI } from '../../../src/cli/cli-entry';
 
-describe('CLI Entry Point', () => {
-    const originalArgv = process.argv;
+describe('CLI Entry Point Function (startCLI)', () => {
+    const originalArgv = [...process.argv]; // Clone original argv
 
     beforeEach(() => {
         jest.clearAllMocks();
-        process.argv = ['node', 'cli-entry.js'];
-        mockMainFunction.mockResolvedValue({ exitCode: 0, stdout: 'Success', stderr: '' });
 
-        // Apply 'as any' cast HERE (Line 42 approx) during initial spy setup
-        // This is the setup requested to avoid the persistent TS2345 error.
-        exitMock = jest.spyOn(process, 'exit')
-           .mockImplementation(((code?: number): never => { // Use actual signature inside
-               // Default implementation throws to catch unexpected calls
-               throw new Error(`process.exit(${code}) called unexpectedly`);
-           }) as any); // <<< CAST TO ANY HERE
+        // Reset argv for each test (startCLI uses process.argv internally)
+        process.argv = ['node', '/path/to/cli-entry.js', 'default-arg'];
+
+        // Default mock implementation for the dependency (runCli)
+        mockRunCliFn.mockResolvedValue({ exitCode: 0, stdout: 'Default Success', stderr: '' });
+
+        // Spies (optional for testing startCLI directly, but good practice)
+        exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+        stdoutSpy = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+        stderrSpy = jest.spyOn(process.stderr, 'write').mockImplementation(() => true);
     });
 
     afterEach(() => {
-        process.argv = originalArgv;
+        process.argv = originalArgv; // Restore original argv
+        // jest.restoreAllMocks(); // Usually covered by clearAllMocks
     });
 
-    it('runs the main CLI function with correct arguments (simulated entry)', async () => {
-        const testArgs = ['node', 'cli-entry.js', 'test.html', '--output', 'out.html'];
-        process.argv = testArgs;
-        const { main } = await import('../../../src/cli/cli');
-        await main(testArgs); // Call the mocked main/runCli
-        expect(mockMainFunction).toHaveBeenCalledWith(testArgs);
-        // Expect exit not to be called (default mock throws if called)
+    it('should call the underlying runCli function with process.argv', async () => {
+        const testArgs = ['node', 'cli-entry.js', 'input.file', '-o', 'output.file'];
+        process.argv = testArgs; // Set specific argv for this test
+
+        await startCLI(); // Execute the function exported from cli-entry
+
+        expect(mockRunCliFn).toHaveBeenCalledTimes(1);
+        // Verify runCli received the arguments startCLI got from process.argv
+        expect(mockRunCliFn).toHaveBeenCalledWith(testArgs);
+        // startCLI itself doesn't call process.exit or write, the surrounding block does
+        expect(exitSpy).not.toHaveBeenCalled();
+        expect(stdoutSpy).not.toHaveBeenCalled();
+        expect(stderrSpy).not.toHaveBeenCalled();
     });
 
-    it('exits with code from main function when simulating entry point exit', async () => {
-        mockMainFunction.mockResolvedValue({ exitCode: 1, stdout: '', stderr: 'Error occurred' });
-        const testArgs = ['node', 'cli-entry.js', '--invalid-option'];
-        process.argv = testArgs;
+    it('should return the result object from runCli', async () => {
+        const expectedResult: CLIResult = { exitCode: 2, stdout: 'Programmatic output', stderr: 'Some warning' };
+        mockRunCliFn.mockResolvedValue(expectedResult); // Configure mock return
+        process.argv = ['node', 'cli.js', 'input.html']; // Set argv for this call
 
-        // Override mock specifically for this test to *not* throw.
-        // Apply 'as any' cast here too, matching the beforeEach approach.
-        exitMock.mockImplementation(((code?: number): never => {
-           return undefined as never;
-        }) as any); // <<< CAST TO ANY on override
+        // Call startCLI and check its return value
+        const result = await startCLI();
 
-        const { main } = await import('../../../src/cli/cli');
-        const result = await main(testArgs);
-
-        if (result.exitCode !== 0) {
-            process.exit(result.exitCode); // Calls the non-throwing mock
-        }
-
-        expect(exitMock).toHaveBeenCalledWith(1);
-        expect(mockMainFunction).toHaveBeenCalledWith(testArgs);
+        expect(result).toEqual(expectedResult); // Verify return value
+        expect(mockRunCliFn).toHaveBeenCalledTimes(1);
+        expect(mockRunCliFn).toHaveBeenCalledWith(process.argv); // Check args passed
+        expect(exitSpy).not.toHaveBeenCalled(); // startCLI doesn't exit
     });
 
-     it('returns CLI result object when used programmatically', async () => {
-        mockMainFunction.mockResolvedValue({ exitCode: 2, stdout: 'Programmatic output', stderr: 'Some warning' });
-        const testArgs = ['node', 'cli.js', 'input.html'];
-        const { runCli } = await import('../../../src/cli/cli');
-        const result = await runCli(testArgs);
+    it('should return the rejected promise if runCli rejects', async () => {
+         const testArgs = ['node', 'cli.js', 'crash'];
+         process.argv = testArgs;
+         const testError = new Error('Unhandled crash');
+         mockRunCliFn.mockRejectedValue(testError); // Configure mock rejection
 
-        expect(result.exitCode).toBe(2);
-        expect(result.stdout).toBe('Programmatic output');
-        expect(mockMainFunction).toHaveBeenCalledWith(testArgs);
-        // Expect exit not to be called (default mock throws if called)
+         // Expect startCLI itself to reject when runCli rejects
+         await expect(startCLI()).rejects.toThrow(testError);
+
+         expect(mockRunCliFn).toHaveBeenCalledTimes(1);
+         expect(mockRunCliFn).toHaveBeenCalledWith(testArgs);
+         expect(exitSpy).not.toHaveBeenCalled(); // No exit from startCLI
     });
-
-    // it('handles uncaught exceptions during CLI execution (simulated, assuming runCli catches)', async () => {
-    //     const testError = new Error('Something broke badly');
-    //     mockMainFunction.mockRejectedValue(testError);
-    //     const testArgs = ['node', 'cli.js', 'bad-input'];
-    //     const { runCli } = await import('../../../src/cli/cli');
-
-    //     // Expect runCli to CATCH the error and RESOLVE based on src/cli/cli.ts structure
-    //     const result = await runCli(testArgs);
-    //     expect(result.exitCode).toBe(1); // Expect exit code 1
-    //     expect(result.stderr).toContain(`💥 Error: ${testError.message}`); // Expect error logged
-
-    //     expect(mockMainFunction).toHaveBeenCalledWith(testArgs);
-    //     // Expect exit not to be called (default mock throws if called)
-    // });
 
 });

@@ -7,30 +7,34 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+// Use standard require for core modules in CJS context if needed
+// const path = require('path');
+// const fs = require('fs');
 
-import { parseOptions } from './options.js';
-import { pack } from '../index.js';
-import type { CLIResult } from '../types';
+import { parseOptions } from './options';
+import { pack } from '../index';
+// Import CLIOptions correctly
+import type { CLIResult, BundleOptions, BundleMetadata, CLIOptions } from '../types';
 
 /**
- * Dynamically loads version info from package.json.
+ * Dynamically loads version info from package.json using CommonJS compatible method.
  *
  * @returns {Record<string, any>} Parsed package.json or fallback
  */
 function getPackageJson(): Record<string, any> {
   try {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    const pkgPath = path.resolve(__dirname, '../../package.json');
-
-    if (fs.existsSync(pkgPath)) {
-      return JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
-    }
-  } catch (_) {
-    // Ignore and fall back
+    // FIX: Use require.resolve which works in CommonJS to find the package path
+    // It resolves relative to the location of this file or the node_modules structure
+    // Assumes 'portapack' is the package name defined in package.json
+    // We need the package.json itself, so resolve 'portapack/package.json'
+    // Use __dirname if available in CJS context, otherwise try relative from cwd as fallback
+    const searchPath = typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..') : process.cwd();
+    const pkgJsonPath = require.resolve('portapack/package.json', { paths: [searchPath] });
+    return require(pkgJsonPath); // Use require directly to load JSON
+  } catch (err) {
+     console.error("Warning: Could not dynamically load package.json for version.", err); // Log error for debugging
+     return { version: '0.0.0-unknown' };
   }
-  return { version: '0.1.0' };
 }
 
 /**
@@ -49,49 +53,68 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
   const originalErr = console.error;
   const originalWarn = console.warn;
 
+  const restoreConsole = () => {
+      console.log = originalLog;
+      console.error = originalErr;
+      console.warn = originalWarn;
+  };
+
   console.log = (...args) => { stdout += args.join(' ') + '\n'; };
   console.error = (...args) => { stderr += args.join(' ') + '\n'; };
   console.warn = (...args) => { stderr += args.join(' ') + '\n'; };
 
-  let opts;
+  // FIX: Use the correct type CLIOptions which includes 'input'
+  let cliOptions: CLIOptions | undefined;
   try {
-    opts = parseOptions(argv);
-    const version = getPackageJson().version || '0.1.0';
+    // Get the fully parsed options object which includes 'input'
+    cliOptions = parseOptions(argv);
+    const version = getPackageJson().version || '0.0.0';
 
-    if (opts.verbose) {
+    if (cliOptions.verbose) {
       console.log(`📦 PortaPack v${version}`);
     }
 
-    if (!opts.input) {
+    // Check for the input property on the correct object
+    if (!cliOptions.input) {
       console.error('❌ Missing input file or URL');
+      restoreConsole();
       return { stdout, stderr, exitCode: 1 };
     }
 
-    const outputPath = opts.output ?? `${path.basename(opts.input).split('.')[0] || 'output'}.packed.html`;
+    // Use path.basename and handle potential extension removal carefully
+    const inputBasename = path.basename(cliOptions.input);
+    const outputDefaultBase = inputBasename.includes('.') ? inputBasename.substring(0, inputBasename.lastIndexOf('.')) : inputBasename;
+    // Use the parsed output option or generate default
+    const outputPath = cliOptions.output ?? `${outputDefaultBase || 'output'}.packed.html`;
 
-    if (opts.verbose) {
-      console.log(`📥 Input: ${opts.input}`);
+    if (cliOptions.verbose) {
+      console.log(`📥 Input: ${cliOptions.input}`); // Access input correctly
       console.log(`📤 Output: ${outputPath}`);
-      console.log(`   Recursive: ${opts.recursive ?? false}`);
-      console.log(`   Embed Assets: ${opts.embedAssets}`);
-      console.log(`   Minify HTML: ${opts.minifyHtml}`);
-      console.log(`   Minify CSS: ${opts.minifyCss}`);
-      console.log(`   Minify JS: ${opts.minifyJs}`);
-      console.log(`   Log Level: ${opts.logLevel}`);
+      // Display other resolved options
+      console.log(`  Recursive: ${cliOptions.recursive ?? false}`);
+      console.log(`  Embed Assets: ${cliOptions.embedAssets}`);
+      console.log(`  Minify HTML: ${cliOptions.minifyHtml}`);
+      console.log(`  Minify CSS: ${cliOptions.minifyCss}`);
+      console.log(`  Minify JS: ${cliOptions.minifyJs}`);
+      console.log(`  Log Level: ${cliOptions.logLevel}`);
     }
 
-    if (opts.dryRun) {
+    if (cliOptions.dryRun) {
       console.log('💡 Dry run mode — no output will be written');
+      restoreConsole();
       return { stdout, stderr, exitCode: 0 };
     }
 
-    // Unified call to the high-level bundler
-    const result = await pack(opts.input, opts);
+    // FIX: Call pack with input as the first argument, and the rest of the options as the second.
+    // The cliOptions object should be compatible with PackOptions expected by pack.
+    const result = await pack(cliOptions.input, cliOptions);
 
+    // Use standard fs sync version as used before
     fs.writeFileSync(outputPath, result.html, 'utf-8');
 
     const meta = result.metadata;
-    console.log(`✅ Packed: ${meta.input} → ${outputPath}`);
+    // Log results to captured stdout
+    console.log(`✅ Packed: ${meta.input} → ${outputPath}`); // meta.input should be correct from pack's result
     console.log(`📦 Size: ${(meta.outputSize / 1024).toFixed(2)} KB`);
     console.log(`⏱️ Time: ${meta.buildTimeMs} ms`);
     console.log(`🖼️ Assets: ${meta.assetCount}`);
@@ -109,15 +132,13 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
 
   } catch (err: any) {
     console.error(`\n💥 Error: ${err?.message || 'Unknown failure'}`);
-    if (err?.stack && opts?.verbose) {
+    // Check verbose flag on the correct variable
+    if (err?.stack && cliOptions?.verbose) {
       console.error(err.stack);
     }
     exitCode = 1;
   } finally {
-    // Restore original console functions
-    console.log = originalLog;
-    console.error = originalErr;
-    console.warn = originalWarn;
+    restoreConsole();
   }
 
   return { stdout, stderr, exitCode };

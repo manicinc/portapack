@@ -5,7 +5,8 @@ const config: Config = {
   /**
    * Use ts-jest with ESM support.
    */
-  preset: 'ts-jest/presets/default-esm',
+  // preset: 'ts-jest/presets/default-esm',
+  preset: 'ts-jest',
 
   /**
    * Node test environment
@@ -20,16 +21,25 @@ const config: Config = {
   /**
    * Tell ts-jest to use ESM transformation
    */
+  // transform: {
+  //   '^.+\\.tsx?$': [
+  //     'ts-jest',
+  //     {
+  //       useESM: true,
+  //       tsconfig: './tsconfig.jest.json'
+  //     }
+  //   ]
+  // },
+
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        useESM: true,
-        tsconfig: './tsconfig.jest.json'
+        // useESM: false, // Explicitly false or remove this line entirely
+        tsconfig: './tsconfig.jest.json' // Ensure this tsconfig targets CommonJS
       }
     ]
   },
-
   /**
    * Treat `.ts` files as ESM modules.
    */
@@ -68,10 +78,10 @@ const config: Config = {
    */
   coverageThreshold: {
     global: {
-      branches: 60,
-      functions: 60,
-      lines: 60,
-      statements: 60,
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
     },
   },
 

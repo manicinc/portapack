@@ -51,28 +51,29 @@ describe('Logger', () => {
         it('creates a logger with default log level INFO', () => {
             const logger = new Logger();
             expect(logger).toBeDefined();
-            // @ts-expect-error Access private member for testing
-            expect(logger.level).toBe(LogLevel.INFO);
+            // REMOVED: @ts-expect-error Access private member for testing (No longer needed)
+            expect((logger as any).level).toBe(LogLevel.INFO); // Cast to any if 'level' is truly private and inaccessible
+                                                               // Or make 'level' public/internal for testing if appropriate
         });
 
         it('creates a logger with specific log level', () => {
             const logger = new Logger(LogLevel.DEBUG);
             expect(logger).toBeDefined();
-            // @ts-expect-error Access private member for testing
-            expect(logger.level).toBe(LogLevel.DEBUG);
+            // REMOVED: @ts-expect-error Access private member for testing (No longer needed)
+            expect((logger as any).level).toBe(LogLevel.DEBUG);
         });
 
         // Test constructor guards against invalid levels
         it('defaults to INFO if constructor receives invalid level', () => {
-             // @ts-expect-error Testing invalid input
+             // @ts-expect-error Testing invalid input (KEEP this one if Logger constructor expects LogLevel)
              const logger = new Logger(99);
-             // @ts-expect-error Access private member for testing
-             expect(logger.level).toBe(LogLevel.INFO);
+             // REMOVED: @ts-expect-error Access private member for testing (No longer needed)
+             expect((logger as any).level).toBe(LogLevel.INFO);
         });
          it('defaults to INFO if constructor receives undefined', () => {
              const logger = new Logger(undefined);
-             // @ts-expect-error Access private member for testing
-             expect(logger.level).toBe(LogLevel.INFO);
+             // REMOVED: @ts-expect-error Access private member for testing (No longer needed)
+             expect((logger as any).level).toBe(LogLevel.INFO);
          });
     });
 
@@ -106,6 +107,7 @@ describe('Logger', () => {
              expect(mockError).toHaveBeenCalledTimes(1);
 
              mockWarn.mockClear();
+             mockError.mockClear(); // Clear mockError too for the next check
              loggerError.warn('Test warn error level'); // Should not log
              expect(mockWarn).not.toHaveBeenCalled();
         });
@@ -121,6 +123,7 @@ describe('Logger', () => {
              expect(mockWarn).toHaveBeenCalledTimes(1);
 
              mockInfo.mockClear();
+             mockWarn.mockClear(); // Clear mockWarn too
              loggerWarn.info('Test info warn level'); // Should not log
              expect(mockInfo).not.toHaveBeenCalled();
         });
@@ -136,6 +139,7 @@ describe('Logger', () => {
              expect(mockInfo).toHaveBeenCalledTimes(1);
 
              mockDebug.mockClear();
+             mockInfo.mockClear(); // Clear mockInfo too
              loggerInfo.debug('Test debug info level'); // Should not log
              expect(mockDebug).not.toHaveBeenCalled();
         });
@@ -198,26 +202,26 @@ describe('Logger', () => {
         describe('Logger.fromVerboseFlag()', () => {
              it('creates logger with DEBUG level if verbose is true', () => {
                  const logger = Logger.fromVerboseFlag({ verbose: true });
-                 // @ts-expect-error Access private member
-                 expect(logger.level).toBe(LogLevel.DEBUG);
+                 // REMOVED: @ts-expect-error Access private member (No longer needed)
+                 expect((logger as any).level).toBe(LogLevel.DEBUG);
              });
 
              it('creates logger with INFO level if verbose is false', () => {
                   const logger = Logger.fromVerboseFlag({ verbose: false });
-                  // @ts-expect-error Access private member
-                  expect(logger.level).toBe(LogLevel.INFO);
+                  // REMOVED: @ts-expect-error Access private member (No longer needed)
+                  expect((logger as any).level).toBe(LogLevel.INFO);
              });
 
              it('creates logger with INFO level if verbose is undefined', () => {
                   const logger = Logger.fromVerboseFlag({}); // Empty options
-                  // @ts-expect-error Access private member
-                  expect(logger.level).toBe(LogLevel.INFO);
+                  // REMOVED: @ts-expect-error Access private member (No longer needed)
+                  expect((logger as any).level).toBe(LogLevel.INFO);
              });
 
               it('creates logger with INFO level if options is undefined', () => {
                    const logger = Logger.fromVerboseFlag(); // No options arg
-                   // @ts-expect-error Access private member
-                   expect(logger.level).toBe(LogLevel.INFO);
+                   // REMOVED: @ts-expect-error Access private member (No longer needed)
+                   expect((logger as any).level).toBe(LogLevel.INFO);
               });
         });
 
@@ -233,30 +237,30 @@ describe('Logger', () => {
                  ['InFo', LogLevel.INFO],
              ])('creates logger with correct level for valid name "%s"', (name, expectedLevel) => {
                  const logger = Logger.fromLevelName(name);
-                  // @ts-expect-error Access private member
-                  expect(logger.level).toBe(expectedLevel);
+                  // REMOVED: @ts-expect-error Access private member (No longer needed)
+                  expect((logger as any).level).toBe(expectedLevel);
                   expect(mockWarn).not.toHaveBeenCalled(); // No warning for valid names
              });
 
              it('defaults to INFO level if levelName is undefined', () => {
                   const logger = Logger.fromLevelName(undefined);
-                  // @ts-expect-error Access private member
-                  expect(logger.level).toBe(LogLevel.INFO);
+                  // REMOVED: @ts-expect-error Access private member (No longer needed)
+                  expect((logger as any).level).toBe(LogLevel.INFO);
                    expect(mockWarn).not.toHaveBeenCalled();
              });
 
               it('uses provided defaultLevel if levelName is undefined', () => {
                    const logger = Logger.fromLevelName(undefined, LogLevel.WARN);
-                   // @ts-expect-error Access private member
-                   expect(logger.level).toBe(LogLevel.WARN);
+                   // REMOVED: @ts-expect-error Access private member (No longer needed)
+                   expect((logger as any).level).toBe(LogLevel.WARN);
                     expect(mockWarn).not.toHaveBeenCalled();
               });
 
 
              it('defaults to INFO level and logs warning for invalid name', () => {
                   const logger = Logger.fromLevelName('invalidLevel');
-                  // @ts-expect-error Access private member
-                  expect(logger.level).toBe(LogLevel.INFO); // Falls back to default INFO
+                  // REMOVED: @ts-expect-error Access private member (No longer needed)
+                  expect((logger as any).level).toBe(LogLevel.INFO); // Falls back to default INFO
                   // Check that console.warn was called *directly* by the static method
                    expect(mockWarn).toHaveBeenCalledTimes(1);
                    expect(mockWarn).toHaveBeenCalledWith(expect.stringContaining('[Logger] Invalid log level name "invalidLevel". Defaulting to INFO.'));
@@ -264,8 +268,8 @@ describe('Logger', () => {
 
              it('uses provided defaultLevel and logs warning for invalid name', () => {
                   const logger = Logger.fromLevelName('invalidLevel', LogLevel.ERROR);
-                  // @ts-expect-error Access private member
-                  expect(logger.level).toBe(LogLevel.ERROR); // Falls back to provided default ERROR
+                  // REMOVED: @ts-expect-error Access private member (No longer needed)
+                  expect((logger as any).level).toBe(LogLevel.ERROR); // Falls back to provided default ERROR
                   // Check that console.warn was called *directly* by the static method
                   expect(mockWarn).toHaveBeenCalledTimes(1);
                   expect(mockWarn).toHaveBeenCalledWith(expect.stringContaining('[Logger] Invalid log level name "invalidLevel". Defaulting to ERROR.'));
