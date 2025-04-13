@@ -1,3 +1,15 @@
+# [0.3.0](https://github.com/manicinc/portapack/compare/v0.2.1...v0.3.0) (2025-04-13)
+
+
+### Bug Fixes
+
+* **cli:** fix CLI execution via npx and global install ([88774e8](https://github.com/manicinc/portapack/commit/88774e80d28d0ac9292906ac7454d4528a5396ec))
+
+
+### Features
+
+* api upgrades / revamps; update types; more robust core features and test fixes; update docs ([34e7b4a](https://github.com/manicinc/portapack/commit/34e7b4af55c6c934af8be0f1c43d427fd00a9594))
+
 ## [0.2.1](https://github.com/manicinc/portapack/compare/v0.2.0...v0.2.1) (2025-04-11)
 
 
