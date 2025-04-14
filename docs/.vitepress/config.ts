@@ -12,7 +12,7 @@ export default defineConfig({
     ['link', { rel: 'icon', href: '/portapack/favicon.ico' }],
     ['meta', { name: 'og:title', content: 'PortaPack' }],
     ['meta', { name: 'og:description', content: 'Bundle & Minify HTML into a Single Portable File' }],
-    ['meta', { name: 'og:image', content: '/portapack/portapack.png' }], // Updated to use your non-transparent logo
+    ['meta', { name: 'og:image', content: '/portapack/portapack.jpg' }], // Updated to use your non-transparent logo
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }]
   ],
   
