@@ -36,7 +36,7 @@ import { pack } from 'portapack';
 async function bundleLocalSite() {
   const result = await pack('./index.html');
   console.log(result.html);
-  
+
   // Access metadata about the build
   console.log(`Output size: ${result.metadata.outputSize} bytes`);
   console.log(`Build time: ${result.metadata.buildTimeMs} ms`);
@@ -49,9 +49,9 @@ async function bundleWithOptions() {
     minifyCss: true,
     minifyJs: true,
     baseUrl: 'https://example.com',
-    embedAssets: true
+    embedAssets: true,
   });
- 
+
   // Use or save the bundled HTML
   console.log(result.html);
 }
@@ -59,12 +59,12 @@ async function bundleWithOptions() {
 // Recursive bundling of a website
 async function bundleWebsite() {
   const result = await pack('https://example.com', {
-    recursive: 2,  // Crawl up to 2 levels deep
+    recursive: 2, // Crawl up to 2 levels deep
     minifyHtml: true,
     minifyCss: true,
-    minifyJs: true
+    minifyJs: true,
   });
-  
+
   console.log(`Bundled ${result.metadata.pagesBundled} pages`);
 }
 ```
@@ -83,18 +83,18 @@ import {
 
 // Bundle a single HTML file or URL
 const singleResult = await generatePortableHTML('./index.html', {
-  minifyHtml: true
+  minifyHtml: true,
 });
 
 // Recursively bundle a site
 const recursiveResult = await generateRecursivePortableHTML('https://example.com', 2, {
-  minifyCss: true
+  minifyCss: true,
 });
 
 // Create multi-page bundle
 const multiPageBundle = await bundleMultiPageHTML([
   { path: '/', html: '<html>...</html>' },
-  { path: '/about', html: '<html>...</html>' }
+  { path: '/about', html: '<html>...</html>' },
 ]);
 ```
 
@@ -126,6 +126,7 @@ Encountering issues? Check our [Troubleshooting Guide](https://manicinc.github.i
 ## Contributing
 
 Interested in improving PortaPack?
+
 - [View Contributing Guidelines](https://manicinc.github.io/portapack/contributing)
 
 ## Support

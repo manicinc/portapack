@@ -21,31 +21,33 @@ import { sanitizeSlug } from '../utils/slugify';
  * @returns The resolved base URL, ending in a trailing slash.
  */
 function determineBaseUrl(input: string, logger?: Logger): string {
-    try {
-        if (input.startsWith('http://') || input.startsWith('https://')) {
-            const url = new URL(input);
-            // Go up to the last '/' in the pathname
-            url.pathname = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
-            url.search = ''; // Remove query string
-            url.hash = ''; // Remove fragment
-            const baseUrl = url.toString();
-            logger?.debug(`Determined remote base URL: ${baseUrl}`);
-            return baseUrl;
-        } else {
-            // Handle local file path
-            const absoluteDir = dirname(resolve(input));
-            // Ensure trailing separator for directory URL conversion
-            const dirPathWithSeparator = absoluteDir.endsWith(pathSeparator) ? absoluteDir : absoluteDir + pathSeparator;
-            const baseUrl = pathToFileURL(dirPathWithSeparator).href;
-            logger?.debug(`Determined local base URL: ${baseUrl}`);
-            return baseUrl;
-        }
-    } catch (error: any) {
-        // Use logger?.error correctly
-        logger?.error(`💀 Failed to determine base URL for "${input}": ${error.message}`);
-        // Return a default relative base URL on error
-        return './';
+  try {
+    if (input.startsWith('http://') || input.startsWith('https://')) {
+      const url = new URL(input);
+      // Go up to the last '/' in the pathname
+      url.pathname = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
+      url.search = ''; // Remove query string
+      url.hash = ''; // Remove fragment
+      const baseUrl = url.toString();
+      logger?.debug(`Determined remote base URL: ${baseUrl}`);
+      return baseUrl;
+    } else {
+      // Handle local file path
+      const absoluteDir = dirname(resolve(input));
+      // Ensure trailing separator for directory URL conversion
+      const dirPathWithSeparator = absoluteDir.endsWith(pathSeparator)
+        ? absoluteDir
+        : absoluteDir + pathSeparator;
+      const baseUrl = pathToFileURL(dirPathWithSeparator).href;
+      logger?.debug(`Determined local base URL: ${baseUrl}`);
+      return baseUrl;
     }
+  } catch (error: any) {
+    // Use logger?.error correctly
+    logger?.error(`💀 Failed to determine base URL for "${input}": ${error.message}`);
+    // Return a default relative base URL on error
+    return './';
+  }
 }
 
 /**
@@ -58,54 +60,67 @@ function determineBaseUrl(input: string, logger?: Logger): string {
  * @returns A fully inlined and bundled HTML string.
  */
 export async function bundleSingleHTML(
-    parsedHtml: ParsedHTML,
-    inputPathOrUrl: string, // Renamed parameter for clarity
-    options: BundleOptions = {},
-    logger?: Logger
+  parsedHtml: ParsedHTML,
+  inputPathOrUrl: string, // Renamed parameter for clarity
+  options: BundleOptions = {},
+  logger?: Logger
 ): Promise<string> {
-    // Define comprehensive defaults
-    const defaultOptions: Required<Omit<BundleOptions, 'logLevel'|'loggerInstance'>> = { // Omit non-serializable/runtime options from defaults
-        embedAssets: true,
-        minifyHtml: true,
-        minifyJs: true,
-        minifyCss: true,
-        baseUrl: '',
-        verbose: false, // Default verbosity usually controlled by logger level
-        dryRun: false,
-        recursive: false, // Default non-recursive for single bundle
-        output: '', // Default handled elsewhere or not relevant here
-        // Omit logLevel from defaults, use logger?.level
-    };
+  // Define comprehensive defaults
+  const defaultOptions: Required<Omit<BundleOptions, 'logLevel' | 'loggerInstance'>> = {
+    // Omit non-serializable/runtime options from defaults
+    embedAssets: true,
+    minifyHtml: true,
+    minifyJs: true,
+    minifyCss: true,
+    baseUrl: '',
+    verbose: false, // Default verbosity usually controlled by logger level
+    dryRun: false,
+    recursive: false, // Default non-recursive for single bundle
+    output: '', // Default handled elsewhere or not relevant here
+    // Omit logLevel from defaults, use logger?.level
+  };
 
-    // Merge provided options over defaults
-    const mergedOptions = { ...defaultOptions, ...options };
+  // Merge provided options over defaults
+  const mergedOptions = { ...defaultOptions, ...options };
 
-    // Determine base URL only if not explicitly provided
-    if (!mergedOptions.baseUrl) {
-        mergedOptions.baseUrl = determineBaseUrl(inputPathOrUrl, logger);
-    }
+  // Determine base URL only if not explicitly provided
+  if (!mergedOptions.baseUrl) {
+    mergedOptions.baseUrl = determineBaseUrl(inputPathOrUrl, logger);
+  }
 
-    try {
-        logger?.debug(`Starting HTML bundling for ${inputPathOrUrl}`);
-        // Use logger?.level safely
-        const effectiveLogLevel = (logger && typeof logger.level === 'number') ? logger.level : LogLevel.INFO; // Default to INFO if logger undefined or level wrong type
-        logger?.debug(`Effective options: ${JSON.stringify({
-            ...mergedOptions,
-            logLevel: effectiveLogLevel // Include actual log level if needed
-        }, null, 2)}`);
+  try {
+    logger?.debug(`Starting HTML bundling for ${inputPathOrUrl}`);
+    // Use logger?.level safely
+    const effectiveLogLevel =
+      logger && typeof logger.level === 'number' ? logger.level : LogLevel.INFO; // Default to INFO if logger undefined or level wrong type
+    logger?.debug(
+      `Effective options: ${JSON.stringify(
+        {
+          ...mergedOptions,
+          logLevel: effectiveLogLevel, // Include actual log level if needed
+        },
+        null,
+        2
+      )}`
+    );
 
-        // Execute the bundling pipeline
-        const extracted = await extractAssets(parsedHtml, mergedOptions.embedAssets, mergedOptions.baseUrl, logger);
-        const minified = await minifyAssets(extracted, mergedOptions, logger);
-        const result = packHTML(minified, logger);
+    // Execute the bundling pipeline
+    const extracted = await extractAssets(
+      parsedHtml,
+      mergedOptions.embedAssets,
+      mergedOptions.baseUrl,
+      logger
+    );
+    const minified = await minifyAssets(extracted, mergedOptions, logger);
+    const result = packHTML(minified, logger);
 
-        logger?.info(`Single HTML bundling complete for: ${inputPathOrUrl}`);
-        return result;
-    } catch (error: any) {
-        logger?.error(`Error during single HTML bundling for ${inputPathOrUrl}: ${error.message}`);
-        // Re-throw to allow higher-level handling
-        throw error;
-    }
+    logger?.info(`Single HTML bundling complete for: ${inputPathOrUrl}`);
+    return result;
+  } catch (error: any) {
+    logger?.error(`Error during single HTML bundling for ${inputPathOrUrl}: ${error.message}`);
+    // Re-throw to allow higher-level handling
+    throw error;
+  }
 }
 
 /**
@@ -117,108 +132,123 @@ export async function bundleSingleHTML(
  * @throws {Error} If the input is invalid or contains no usable pages.
  */
 export function bundleMultiPageHTML(pages: PageEntry[], logger?: Logger): string {
-    if (!Array.isArray(pages)) {
-        const errorMsg = 'Input pages must be an array of PageEntry objects';
-        logger?.error(errorMsg);
-        throw new Error(errorMsg);
+  if (!Array.isArray(pages)) {
+    const errorMsg = 'Input pages must be an array of PageEntry objects';
+    logger?.error(errorMsg);
+    throw new Error(errorMsg);
+  }
+
+  logger?.info(`Bundling ${pages.length} pages into a multi-page HTML document.`);
+
+  let pageIndex = 0; // Keep track of original index for logging
+  const validPages = pages.filter(page => {
+    const isValid =
+      page &&
+      typeof page === 'object' &&
+      typeof page.url === 'string' &&
+      typeof page.html === 'string';
+    // Log with original index if invalid
+    if (!isValid) logger?.warn(`Skipping invalid page entry at index ${pageIndex}`);
+    pageIndex++; // Increment index regardless
+    return isValid;
+  });
+
+  if (validPages.length === 0) {
+    const errorMsg = 'No valid page entries found in input array';
+    logger?.error(errorMsg);
+    throw new Error(errorMsg);
+  }
+
+  const slugMap = new Map<string, string>();
+  const usedSlugs = new Set<string>();
+  let firstValidSlug: string | undefined = undefined;
+  let pageCounterForFallback = 1; // Counter for unique fallback slugs
+
+  for (const page of validPages) {
+    // --- REVISED SLUG LOGIC ---
+    let baseSlug = sanitizeSlug(page.url);
+
+    // Determine if the URL represents a root index page
+    const isRootIndex =
+      page.url === '/' || page.url === 'index.html' || page.url.endsWith('/index.html');
+
+    if (baseSlug === 'index' && !isRootIndex) {
+      // If sanitizeSlug produced 'index' but it wasn't from a root index URL, avoid using 'index'.
+      logger?.debug(`URL "${page.url}" sanitized to "index", attempting to find alternative slug.`);
+      // Try using the last path segment instead.
+      // Get parts, remove trailing slash/index/index.html, filter empty
+      const pathParts = page.url
+        .replace(/\/$/, '')
+        .split('/')
+        .filter(p => p && p.toLowerCase() !== 'index.html' && p.toLowerCase() !== 'index');
+      if (pathParts.length > 0) {
+        const lastPartSlug = sanitizeSlug(pathParts[pathParts.length - 1]);
+        if (lastPartSlug && lastPartSlug !== 'index') {
+          // Avoid re-introducing 'index' or using empty
+          baseSlug = lastPartSlug;
+          logger?.debug(`Using last path part slug "${baseSlug}" instead.`);
+        } else {
+          baseSlug = 'page'; // Fallback if last part is empty, 'index', or missing
+          logger?.debug(`Last path part invalid ("${lastPartSlug}"), using fallback slug "page".`);
+        }
+      } else {
+        baseSlug = 'page'; // Fallback if no other parts
+        logger?.debug(`No valid path parts found, using fallback slug "page".`);
+      }
+    } else if (!baseSlug) {
+      // Handle cases where sanitizeSlug returns an empty string initially (e.g. sanitizeSlug('/'))
+      if (isRootIndex) {
+        baseSlug = 'index'; // Ensure root index gets 'index' slug even if sanitizeSlug returns empty
+        logger?.debug(
+          `URL "${page.url}" sanitized to empty string, using "index" as it is a root index.`
+        );
+      } else {
+        baseSlug = 'page'; // Fallback for other empty slugs
+        logger?.debug(`URL "${page.url}" sanitized to empty string, using fallback slug "page".`);
+      }
     }
-
-    logger?.info(`Bundling ${pages.length} pages into a multi-page HTML document.`);
-
-    let pageIndex = 0; // Keep track of original index for logging
-    const validPages = pages.filter(page => {
-        const isValid = page && typeof page === 'object' && typeof page.url === 'string' && typeof page.html === 'string';
-        // Log with original index if invalid
-        if (!isValid) logger?.warn(`Skipping invalid page entry at index ${pageIndex}`);
-        pageIndex++; // Increment index regardless
-        return isValid;
-    });
-
-    if (validPages.length === 0) {
-        const errorMsg = 'No valid page entries found in input array';
-        logger?.error(errorMsg);
-        throw new Error(errorMsg);
+    // Ensure baseSlug is never empty after this point before collision check
+    if (!baseSlug) {
+      // Use a counter to ensure uniqueness if multiple pages sanitize to empty/page
+      baseSlug = `page-${pageCounterForFallback++}`;
+      logger?.warn(
+        `Could not determine a valid base slug for "${page.url}", using generated fallback "${baseSlug}".`
+      );
     }
+    // --- END REVISED SLUG LOGIC ---
 
-    const slugMap = new Map<string, string>();
-    const usedSlugs = new Set<string>();
-    let firstValidSlug: string | undefined = undefined;
-    let pageCounterForFallback = 1; // Counter for unique fallback slugs
-
-    for (const page of validPages) {
-        // --- REVISED SLUG LOGIC ---
-        let baseSlug = sanitizeSlug(page.url);
-
-        // Determine if the URL represents a root index page
-        const isRootIndex = (page.url === '/' || page.url === 'index.html' || page.url.endsWith('/index.html'));
-
-        if (baseSlug === 'index' && !isRootIndex) {
-            // If sanitizeSlug produced 'index' but it wasn't from a root index URL, avoid using 'index'.
-            logger?.debug(`URL "${page.url}" sanitized to "index", attempting to find alternative slug.`);
-            // Try using the last path segment instead.
-             // Get parts, remove trailing slash/index/index.html, filter empty
-            const pathParts = page.url.replace(/\/$/, '').split('/').filter(p => p && p.toLowerCase() !== 'index.html' && p.toLowerCase() !== 'index');
-            if (pathParts.length > 0) {
-                const lastPartSlug = sanitizeSlug(pathParts[pathParts.length - 1]);
-                if (lastPartSlug && lastPartSlug !== 'index') { // Avoid re-introducing 'index' or using empty
-                     baseSlug = lastPartSlug;
-                     logger?.debug(`Using last path part slug "${baseSlug}" instead.`);
-                } else {
-                     baseSlug = 'page'; // Fallback if last part is empty, 'index', or missing
-                     logger?.debug(`Last path part invalid ("${lastPartSlug}"), using fallback slug "page".`);
-                }
-            } else {
-                 baseSlug = 'page'; // Fallback if no other parts
-                 logger?.debug(`No valid path parts found, using fallback slug "page".`);
-            }
-        } else if (!baseSlug) {
-             // Handle cases where sanitizeSlug returns an empty string initially (e.g. sanitizeSlug('/'))
-             if (isRootIndex) {
-                 baseSlug = 'index'; // Ensure root index gets 'index' slug even if sanitizeSlug returns empty
-                 logger?.debug(`URL "${page.url}" sanitized to empty string, using "index" as it is a root index.`);
-             } else {
-                baseSlug = 'page'; // Fallback for other empty slugs
-                logger?.debug(`URL "${page.url}" sanitized to empty string, using fallback slug "page".`);
-             }
-        }
-        // Ensure baseSlug is never empty after this point before collision check
-        if (!baseSlug) {
-             // Use a counter to ensure uniqueness if multiple pages sanitize to empty/page
-            baseSlug = `page-${pageCounterForFallback++}`;
-            logger?.warn(`Could not determine a valid base slug for "${page.url}", using generated fallback "${baseSlug}".`);
-        }
-        // --- END REVISED SLUG LOGIC ---
-
-
-        // --- Collision Handling ---
-        let slug = baseSlug;
-        let collisionCounter = 1;
-        // Keep track of the original baseSlug for logging purposes in case of collision
-        const originalBaseSlugForLog = baseSlug;
-        while (usedSlugs.has(slug)) {
-            const newSlug = `${originalBaseSlugForLog}-${collisionCounter++}`;
-            // Log with original intended base slug for clarity
-            logger?.warn(`Slug collision detected for "${page.url}" (intended slug: '${originalBaseSlugForLog}'). Using "${newSlug}" instead.`);
-            slug = newSlug;
-        }
-        usedSlugs.add(slug);
-        slugMap.set(page.url, slug);
-
-        // Track the first valid slug for default navigation
-        if (firstValidSlug === undefined) { // Use triple equals for check
-            firstValidSlug = slug;
-        }
+    // --- Collision Handling ---
+    let slug = baseSlug;
+    let collisionCounter = 1;
+    // Keep track of the original baseSlug for logging purposes in case of collision
+    const originalBaseSlugForLog = baseSlug;
+    while (usedSlugs.has(slug)) {
+      const newSlug = `${originalBaseSlugForLog}-${collisionCounter++}`;
+      // Log with original intended base slug for clarity
+      logger?.warn(
+        `Slug collision detected for "${page.url}" (intended slug: '${originalBaseSlugForLog}'). Using "${newSlug}" instead.`
+      );
+      slug = newSlug;
     }
+    usedSlugs.add(slug);
+    slugMap.set(page.url, slug);
 
-    // Determine the default page slug - prefer 'index' if present, otherwise use the first page's slug
-     // Use 'page' as ultimate fallback if firstValidSlug is somehow still undefined (e.g., only one page failed slug generation)
-    const defaultPageSlug = usedSlugs.has('index') ? 'index' : (firstValidSlug || 'page');
+    // Track the first valid slug for default navigation
+    if (firstValidSlug === undefined) {
+      // Use triple equals for check
+      firstValidSlug = slug;
+    }
+  }
 
-    // Generate HTML structure
-    // (Ensure template IDs use `page-${slug}`)
-    // (Ensure nav links use `href="#${slug}"` and `data-page="${slug}"`)
-    // (Ensure router script uses `${defaultPageSlug}` correctly)
-    let output = `
+  // Determine the default page slug - prefer 'index' if present, otherwise use the first page's slug
+  // Use 'page' as ultimate fallback if firstValidSlug is somehow still undefined (e.g., only one page failed slug generation)
+  const defaultPageSlug = usedSlugs.has('index') ? 'index' : firstValidSlug || 'page';
+
+  // Generate HTML structure
+  // (Ensure template IDs use `page-${slug}`)
+  // (Ensure nav links use `href="#${slug}"` and `data-page="${slug}"`)
+  // (Ensure router script uses `${defaultPageSlug}` correctly)
+  let output = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -236,18 +266,22 @@ export function bundleMultiPageHTML(pages: PageEntry[], logger?: Logger): string
 </head>
 <body>
 <nav id="main-nav">
-    ${validPages.map(p => {
+    ${validPages
+      .map(p => {
         const slug = slugMap.get(p.url)!; // Slug is guaranteed to exist here
         const label = slug; // Use slug as label for simplicity
         return `<a href="#${slug}" data-page="${slug}">${label}</a>`;
-    }).join('\n        ')}
+      })
+      .join('\n        ')}
 </nav>
 <div id="page-container"></div>
-${validPages.map(p => {
+${validPages
+  .map(p => {
     const slug = slugMap.get(p.url)!;
     // Basic sanitization/escaping might be needed for p.html if needed
     return `<template id="page-${slug}">${p.html}</template>`;
-}).join('\n    ')}
+  })
+  .join('\n    ')}
 <script id="router-script">
     document.addEventListener('DOMContentLoaded', function() {
         const pageContainer = document.getElementById('page-container');
@@ -306,6 +340,6 @@ ${validPages.map(p => {
 </script>
 </body>
 </html>`;
-    logger?.info(`Multi-page bundle generated. Size: ${Buffer.byteLength(output, 'utf-8')} bytes.`);
-    return output;
+  logger?.info(`Multi-page bundle generated. Size: ${Buffer.byteLength(output, 'utf-8')} bytes.`);
+  return output;
 }

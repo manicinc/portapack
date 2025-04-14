@@ -13,7 +13,7 @@ import {
   generatePortableHTML,
   bundleMultiPageHTML,
   generateRecursivePortableHTML,
-  fetchAndPackWebPage
+  fetchAndPackWebPage,
 } from '../src/index'; // 🔧 use '../src/index' for dev, '../dist/index' for built
 
 const TEMP_DIR = path.join(os.tmpdir(), 'portapack-example');
@@ -40,10 +40,7 @@ function logMetadata(meta: any, filePath: string) {
 }
 
 // Accepts a function that returns { html, metadata }
-async function timedBundle(
-  name: string,
-  task: () => Promise<{ html: string; metadata: any }>
-) {
+async function timedBundle(name: string, task: () => Promise<{ html: string; metadata: any }>) {
   const start = Date.now();
   console.log(chalk.cyanBright(`\n⏳ ${name}`));
 
@@ -66,7 +63,7 @@ async function timedBundle(
       embedAssets: true,
       minifyHtml: true,
       minifyCss: true,
-      minifyJs: true
+      minifyJs: true,
     })
   );
 
@@ -85,7 +82,7 @@ async function timedBundle(
   await timedBundle('Multi-Page Site Bundling', async () => {
     const pages = [
       { url: 'https://example.com', html: '<html><body>Page 1</body></html>' },
-      { url: 'https://example.com/about', html: '<html><body>Page 2</body></html>' }
+      { url: 'https://example.com/about', html: '<html><body>Page 2</body></html>' },
     ];
     const html = bundleMultiPageHTML(pages);
     return {
@@ -94,8 +91,8 @@ async function timedBundle(
         input: 'manual pages',
         pagesBundled: pages.length,
         outputSize: html.length,
-        buildTimeMs: 0
-      }
+        buildTimeMs: 0,
+      },
     };
   });
 
@@ -107,7 +104,7 @@ async function timedBundle(
   // 🔹 Broken page test
   console.log(chalk.cyan('\n⏳ Broken Page Test'));
   try {
-    const { html, metadata} = await fetchAndPackWebPage('https://example.com/404');
+    const { html, metadata } = await fetchAndPackWebPage('https://example.com/404');
     const brokenOut = await writeTempFile('broken-page.html', html);
     console.log(chalk.yellow('⚠️ Page returned something, saved to:'), `file://${brokenOut}`);
   } catch {

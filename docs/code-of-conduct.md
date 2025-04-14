@@ -3,6 +3,7 @@
 ## Our Pledge
 
 We are committed to providing a friendly, safe, and welcoming environment for all contributors, regardless of:
+
 - Age
 - Body size
 - Disability
@@ -18,6 +19,7 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 ## Our Standards
 
 ### Positive Behavior
+
 - Using welcoming and inclusive language
 - Being respectful of differing viewpoints
 - Gracefully accepting constructive criticism
@@ -25,6 +27,7 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 - Showing empathy towards other community members
 
 ### Unacceptable Behavior
+
 - Trolling, insulting/derogatory comments
 - Public or private harassment
 - Publishing others' private information
@@ -33,6 +36,7 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 ## Enforcement Responsibilities
 
 Community leaders are responsible for:
+
 - Clarifying acceptable behavior standards
 - Providing fair and consistent feedback
 - Removing, editing, or rejecting contributions that violate this Code of Conduct
@@ -40,6 +44,7 @@ Community leaders are responsible for:
 ## Reporting Issues
 
 If you experience or witness unacceptable behavior:
+
 1. Email [conduct@manicinc.com](mailto:conduct@manicinc.com)
 2. Provide:
    - Your contact information
@@ -50,6 +55,7 @@ If you experience or witness unacceptable behavior:
 ## Consequences
 
 Violations may result in:
+
 - Temporary or permanent ban from community spaces
 - Removal of contributions
 - Public or private warnings

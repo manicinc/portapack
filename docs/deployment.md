@@ -16,10 +16,10 @@ When changes are pushed to master, semantic-release will:
 
 ### Release Types
 
-| Commit Format | Result |
-|--------------|--------|
-| `fix:` | 🔧 PATCH release |
-| `feat:` | ✨ MINOR release |
+| Commit Format                | Result           |
+| ---------------------------- | ---------------- |
+| `fix:`                       | 🔧 PATCH release |
+| `feat:`                      | ✨ MINOR release |
 | `feat:` + `BREAKING CHANGE:` | 🚨 MAJOR release |
 
 ## 📦 Manual Release (Optional Fallback)
@@ -45,6 +45,7 @@ In your GitHub repository:
 2. Add the following secrets:
 
 - `NPM_TOKEN`
+
   - Create at npmjs.com > Access Tokens
   - Choose type: `Automation` (read + publish)
   - Paste into GitHub as `NPM_TOKEN`
@@ -61,6 +62,7 @@ In your GitHub repository:
 ## 🧪 Test Coverage
 
 ### Tools Used
+
 - Jest
 - Coveralls
 
@@ -102,17 +104,20 @@ The project automatically generates a test coverage report and makes it accessib
 ## 🧼 Pre-commit Hooks
 
 We use Husky + `lint-staged`:
+
 - ✅ Auto-lint + format on commit
 - ✅ Validate commit messages via Commitizen
 
 ## 🧯 Troubleshooting
 
 ### Commit Fails?
+
 - Use `npm run commit` (or `git cz`) to follow the correct format
 - Check Husky is installed (`.husky/` exists)
 - Run `npm install` again to restore hooks
 
 ### Release Fails?
+
 - Check GitHub Actions logs
 - Ensure `NPM_TOKEN` secret is added
 - Ensure commit messages follow Conventional Commits

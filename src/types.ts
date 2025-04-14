@@ -18,7 +18,7 @@
  */
 export interface Asset {
   type: 'css' | 'js' | 'image' | 'font' | 'video' | 'audio' | 'other'; // Add video and audio
-  
+
   /** The resolved or original URL of the asset */
   url: string;
 
@@ -94,16 +94,15 @@ export interface BundleOptions {
 // --- LogLevel Enum ---
 // Defines available log levels as a numeric enum for comparisons.
 export enum LogLevel {
-  NONE = 0,   // No logging (equivalent to 'silent')
-  ERROR = 1,  // Only errors
-  WARN = 2,   // Errors and warnings
-  INFO = 3,   // Errors, warnings, and info (Default)
-  DEBUG = 4   // All messages (Verbose)
+  NONE = 0, // No logging (equivalent to 'silent')
+  ERROR = 1, // Only errors
+  WARN = 2, // Errors and warnings
+  INFO = 3, // Errors, warnings, and info (Default)
+  DEBUG = 4, // All messages (Verbose)
 }
 
 // --- String Literal Type for LogLevel Names (Optional, useful for CLI parsing) ---
 export type LogLevelName = 'debug' | 'info' | 'warn' | 'error' | 'silent' | 'none';
-
 
 /**
  * Summary statistics and metadata returned after the packing/bundling process completes.
@@ -138,14 +137,13 @@ export interface BuildResult {
   metadata: BundleMetadata;
 }
 
-
 /** CLI-specific options extending BundleOptions. */
 export interface CLIOptions extends BundleOptions {
   /** Input file or URL (positional). */
   input?: string;
   /** Max depth for recursive crawling (numeric alias for recursive). */
-   maxDepth?: number; // Used by commander, then merged into 'recursive'
-   minify?: boolean; // Minify assets (defaults to true)
+  maxDepth?: number; // Used by commander, then merged into 'recursive'
+  minify?: boolean; // Minify assets (defaults to true)
 }
 
 /**

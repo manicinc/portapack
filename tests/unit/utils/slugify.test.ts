@@ -7,19 +7,16 @@ import { slugify } from '../../../src/utils/slugify'; // Adjust path if needed
 import { describe, it, expect } from '@jest/globals';
 
 describe('slugify()', () => {
-    it('should handle typical URLs', () => {
-        // --- Expectations matching the corrected slugify logic ---
-        expect(slugify('https://site.com/path/page.html')).toBe('path-page');
-        expect(slugify('products/item-1.html')).toBe('products-item-1');
-        expect(slugify(' search?q=test page 2 ')).toBe('search-q-test-page-2');
-        expect(slugify('/path/with/slashes/')).toBe('path-with-slashes');
-        // ----------------------------------------------------------
-        expect(slugify('')).toBe('index');
-    });
-
+  it('should handle typical URLs', () => {
+    // --- Expectations matching the corrected slugify logic ---
+    expect(slugify('https://site.com/path/page.html')).toBe('path-page');
+    expect(slugify('products/item-1.html')).toBe('products-item-1');
+    expect(slugify(' search?q=test page 2 ')).toBe('search-q-test-page-2');
+    expect(slugify('/path/with/slashes/')).toBe('path-with-slashes');
+    // ----------------------------------------------------------
+    expect(slugify('')).toBe('index');
+  });
 });
-
-
 
 // describe('🔧 sanitizeSlug()', () => {
 //   const tests: Array<[string, string]> = [

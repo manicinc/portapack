@@ -5,8 +5,10 @@
 ### 1. Installation Problems
 
 #### npm Install Fails
+
 - **Symptom**: Error during `npm install`
 - **Solutions**:
+
   ```bash
   # Clear npm cache
   npm cache clean --force
@@ -19,8 +21,10 @@
 ### 2. CLI Errors
 
 #### Permission Denied
+
 - **Symptom**: `EACCES` errors
 - **Solutions**:
+
   ```bash
   # Use npm with sudo (not recommended long-term)
   sudo npm install -g portapack
@@ -31,6 +35,7 @@
   ```
 
 #### Asset Embedding Failures
+
 - **Symptom**: Some assets not embedded
 - **Possible Causes**:
   - Incorrect base URL
@@ -40,6 +45,7 @@
 ### 3. Performance Issues
 
 #### Slow Recursive Crawling
+
 - **Solution**: Limit crawl depth
   ```bash
   portapack -i https://site.com --recursive --max-depth 2
@@ -48,6 +54,7 @@
 ### 4. Minification Problems
 
 #### CSS/JS Not Minifying
+
 - **Check**:
   - Use `--no-minify-css` or `--no-minify-js` flags
   - Verify asset paths
@@ -56,12 +63,14 @@
 ## 🔍 Debugging Techniques
 
 ### Verbose Logging
+
 ```bash
 # Enable verbose output
 portapack -i ./site --verbose
 ```
 
 ### Dry Run
+
 ```bash
 # Preview bundling without generating file
 portapack -i ./site --dry-run
@@ -70,6 +79,7 @@ portapack -i ./site --dry-run
 ## 🌐 Network & Security
 
 ### Proxy Configuration
+
 ```bash
 # Set proxy for asset fetching
 export HTTP_PROXY=http://proxy.example.com
@@ -79,6 +89,7 @@ portapack -i https://site.com
 ## 📊 Diagnostics
 
 ### Generate Diagnostic Report
+
 ```bash
 # Create debug information
 portapack --diagnostics > portapack-debug.log

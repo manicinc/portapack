@@ -26,25 +26,25 @@ Where `[input]` is the path to a local HTML file or a remote URL.
 
 ## Options
 
-| Option | Shorthand | Description | Default |
-|--------|-----------|-------------|---------|
-| `[input]` | | Required. Input local file path or remote URL (http/https) to process. | - |
-| `--output <file>` | `-o` | Output file path for the bundled HTML. | `{input-basename}.packed.html` |
-| `--recursive [depth]` | `-r` | Recursively bundle links up to depth. If depth omitted, defaults to true (no limit). Only applies to remote URLs. | `false` (disabled) |
-| `--max-depth <n>` | | Set maximum depth for recursive crawling (alternative to `-r <n>`). | - |
-| `--minify` | `-m` | Enable all minification (HTML, CSS, JS). | - |
-| `--no-minify` | | Disable all asset minification (HTML, CSS, JS). | `false` |
-| `--no-minify-html` | | Disable only HTML minification. | `false` |
-| `--no-minify-css` | | Disable only CSS minification. | `false` |
-| `--no-minify-js` | | Disable only JavaScript minification. | `false` |
-| `--embed-assets` | `-e` | Embed external assets (CSS, JS, images, fonts) as data URIs or inline content. | `true` |
-| `--no-embed-assets` | | Keep external assets as links (requires network access when viewing). | `false` |
-| `--base-url <url>` | `-b` | Base URL for resolving relative URLs found in the input HTML. | Input path/URL |
-| `--log-level <level>` | | Set logging level (debug, info, warn, error, silent, none). | `info` |
-| `--verbose` | `-v` | Enable verbose logging (shortcut for `--log-level debug`). | `false` |
-| `--dry-run` | `-d` | Perform all steps except writing the output file. Logs intended actions. | `false` |
-| `--help` | `-h` | Show help information and exit. | - |
-| `--version` | | Show PortaPack CLI version number and exit. | - |
+| Option                | Shorthand | Description                                                                                                       | Default                        |
+| --------------------- | --------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| `[input]`             |           | Required. Input local file path or remote URL (http/https) to process.                                            | -                              |
+| `--output <file>`     | `-o`      | Output file path for the bundled HTML.                                                                            | `{input-basename}.packed.html` |
+| `--recursive [depth]` | `-r`      | Recursively bundle links up to depth. If depth omitted, defaults to true (no limit). Only applies to remote URLs. | `false` (disabled)             |
+| `--max-depth <n>`     |           | Set maximum depth for recursive crawling (alternative to `-r <n>`).                                               | -                              |
+| `--minify`            | `-m`      | Enable all minification (HTML, CSS, JS).                                                                          | -                              |
+| `--no-minify`         |           | Disable all asset minification (HTML, CSS, JS).                                                                   | `false`                        |
+| `--no-minify-html`    |           | Disable only HTML minification.                                                                                   | `false`                        |
+| `--no-minify-css`     |           | Disable only CSS minification.                                                                                    | `false`                        |
+| `--no-minify-js`      |           | Disable only JavaScript minification.                                                                             | `false`                        |
+| `--embed-assets`      | `-e`      | Embed external assets (CSS, JS, images, fonts) as data URIs or inline content.                                    | `true`                         |
+| `--no-embed-assets`   |           | Keep external assets as links (requires network access when viewing).                                             | `false`                        |
+| `--base-url <url>`    | `-b`      | Base URL for resolving relative URLs found in the input HTML.                                                     | Input path/URL                 |
+| `--log-level <level>` |           | Set logging level (debug, info, warn, error, silent, none).                                                       | `info`                         |
+| `--verbose`           | `-v`      | Enable verbose logging (shortcut for `--log-level debug`).                                                        | `false`                        |
+| `--dry-run`           | `-d`      | Perform all steps except writing the output file. Logs intended actions.                                          | `false`                        |
+| `--help`              | `-h`      | Show help information and exit.                                                                                   | -                              |
+| `--version`           |           | Show PortaPack CLI version number and exit.                                                                       | -                              |
 
 ## Examples
 
@@ -169,9 +169,9 @@ npx portapack ./index.html -o bundle.html
 ## Exit Codes
 
 | Code | Description |
-|------|-------------|
-| 0 | Success |
-| 1 | Error |
+| ---- | ----------- |
+| 0    | Success     |
+| 1    | Error       |
 
 ## Related Resources
 

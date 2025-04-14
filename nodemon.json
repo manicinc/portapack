@@ -1,11 +1,6 @@
 {
-    "watch": ["src"],
-    "ext": "ts,tsx",
-    "ignore": [
-      "src/**/*.spec.ts",
-      "src/**/*.test.ts",
-      "dist",
-      "node_modules"
-    ],
-    "exec": "npm run docs:api"
-  }
+  "watch": ["src"],
+  "ext": "ts,tsx",
+  "ignore": ["src/**/*.spec.ts", "src/**/*.test.ts", "dist", "node_modules"],
+  "exec": "npm run docs:api"
+}

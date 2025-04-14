@@ -28,12 +28,13 @@ function getPackageJson(): Record<string, any> {
     // Assumes 'portapack' is the package name defined in package.json
     // We need the package.json itself, so resolve 'portapack/package.json'
     // Use __dirname if available in CJS context, otherwise try relative from cwd as fallback
-    const searchPath = typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..') : process.cwd();
+    const searchPath =
+      typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..') : process.cwd();
     const pkgJsonPath = require.resolve('portapack/package.json', { paths: [searchPath] });
     return require(pkgJsonPath); // Use require directly to load JSON
   } catch (err) {
-     console.error("Warning: Could not dynamically load package.json for version.", err); // Log error for debugging
-     return { version: '0.0.0-unknown' };
+    console.error('Warning: Could not dynamically load package.json for version.', err); // Log error for debugging
+    return { version: '0.0.0-unknown' };
   }
 }
 
@@ -54,14 +55,20 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
   const originalWarn = console.warn;
 
   const restoreConsole = () => {
-      console.log = originalLog;
-      console.error = originalErr;
-      console.warn = originalWarn;
+    console.log = originalLog;
+    console.error = originalErr;
+    console.warn = originalWarn;
   };
 
-  console.log = (...args) => { stdout += args.join(' ') + '\n'; };
-  console.error = (...args) => { stderr += args.join(' ') + '\n'; };
-  console.warn = (...args) => { stderr += args.join(' ') + '\n'; };
+  console.log = (...args) => {
+    stdout += args.join(' ') + '\n';
+  };
+  console.error = (...args) => {
+    stderr += args.join(' ') + '\n';
+  };
+  console.warn = (...args) => {
+    stderr += args.join(' ') + '\n';
+  };
 
   // FIX: Use the correct type CLIOptions which includes 'input'
   let cliOptions: CLIOptions | undefined;
@@ -83,7 +90,9 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
 
     // Use path.basename and handle potential extension removal carefully
     const inputBasename = path.basename(cliOptions.input);
-    const outputDefaultBase = inputBasename.includes('.') ? inputBasename.substring(0, inputBasename.lastIndexOf('.')) : inputBasename;
+    const outputDefaultBase = inputBasename.includes('.')
+      ? inputBasename.substring(0, inputBasename.lastIndexOf('.'))
+      : inputBasename;
     // Use the parsed output option or generate default
     const outputPath = cliOptions.output ?? `${outputDefaultBase || 'output'}.packed.html`;
 
@@ -129,7 +138,6 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
         console.warn(`  - ${err}`);
       }
     }
-
   } catch (err: any) {
     console.error(`\n💥 Error: ${err?.message || 'Unknown failure'}`);
     // Check verbose flag on the correct variable

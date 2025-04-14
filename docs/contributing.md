@@ -17,10 +17,12 @@ Refer to our detailed [Development Guide](./development.md) for comprehensive se
 ### 🧪 Development Workflow
 
 1. **Fork the Repository**
+
    - Navigate to [PortaPack GitHub Repository](https://github.com/manicinc/portapack)
-   - Click "Fork" 
+   - Click "Fork"
 
 2. **Clone Your Fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/portapack.git
    cd portapack
@@ -38,6 +40,7 @@ Refer to our detailed [Development Guide](./development.md) for comprehensive se
 We use [Conventional Commits](https://www.conventionalcommits.org/) for structured commit messages.
 
 #### Commit Types
+
 - `feat`: New features
 - `fix`: Bug fixes
 - `docs`: Documentation changes
@@ -47,6 +50,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for structur
 - `chore`: Maintenance tasks
 
 #### Commit Command
+
 ```bash
 npm run commit
 ```

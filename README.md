@@ -9,9 +9,9 @@
   <img src="https://raw.githubusercontent.com/manicinc/portapack/master/docs/assets/portapack-transparent.png" alt="PortaPack Logo" width="200"/>
 </p>
 
-**PortaPack** bundles your entire website — HTML, CSS, JS, images, and fonts — into one  self-contained HTML file. Perfect for snapshots, demos, testing, and offline apps.
+**PortaPack** bundles your entire website — HTML, CSS, JS, images, and fonts — into one self-contained HTML file. Perfect for snapshots, demos, testing, and offline apps.
 
-*Minimal input. Maximal output.*
+_Minimal input. Maximal output._
 
 ## 📚 Documentation
 
@@ -39,19 +39,19 @@ npx portapack ./index.html -o bundle.html
 portapack [input] [options]
 ```
 
-| Option | Description |
-|--------|-------------|
-| `-o, --output <file>` | Output file path |
-| `-r, --recursive [n]` | Crawl site up to n levels deep |
-| `--max-depth <n>` | Explicit crawl depth |
-| `-m, --minify` | Enable all minification |
-| `--no-minify-*` | Disable html, css, or js minify |
-| `-e, --embed-assets` | Inline all assets (default: true) |
-| `--no-embed-assets` | Leave links as-is |
-| `-b, --base-url <url>` | Override base URL resolution |
-| `-v, --verbose` | Show debug output |
-| `--log-level <lvl>` | Set log level: debug, info, warn, error |
-| `-d, --dry-run` | Run without writing file |
+| Option                 | Description                             |
+| ---------------------- | --------------------------------------- |
+| `-o, --output <file>`  | Output file path                        |
+| `-r, --recursive [n]`  | Crawl site up to n levels deep          |
+| `--max-depth <n>`      | Explicit crawl depth                    |
+| `-m, --minify`         | Enable all minification                 |
+| `--no-minify-*`        | Disable html, css, or js minify         |
+| `-e, --embed-assets`   | Inline all assets (default: true)       |
+| `--no-embed-assets`    | Leave links as-is                       |
+| `-b, --base-url <url>` | Override base URL resolution            |
+| `-v, --verbose`        | Show debug output                       |
+| `--log-level <lvl>`    | Set log level: debug, info, warn, error |
+| `-d, --dry-run`        | Run without writing file                |
 
 ### 📋 CLI Examples
 
@@ -99,7 +99,7 @@ const result = await pack('https://example.com', {
   minifyJs: false,
   recursive: 2,
   output: 'site.html',
-  logLevel: LogLevel.INFO
+  logLevel: LogLevel.INFO,
 });
 ```
 
@@ -123,12 +123,12 @@ import {
 } from 'portapack';
 ```
 
-| Function | Purpose |
-|----------|---------|
-| `generatePortableHTML()` | Bundle a single file or URL |
-| `generateRecursivePortableHTML()` | Crawl & bundle entire site |
-| `fetchAndPackWebPage()` | Just fetch HTML (no asset processing) |
-| `bundleMultiPageHTML()` | Combine multiple HTMLs with router |
+| Function                          | Purpose                               |
+| --------------------------------- | ------------------------------------- |
+| `generatePortableHTML()`          | Bundle a single file or URL           |
+| `generateRecursivePortableHTML()` | Crawl & bundle entire site            |
+| `fetchAndPackWebPage()`           | Just fetch HTML (no asset processing) |
+| `bundleMultiPageHTML()`           | Combine multiple HTMLs with router    |
 
 ## 🤝 Contribute
 
@@ -142,13 +142,12 @@ npm run dev
 
 ## 📊 Project Health
 
-| Metric       | Value |
-|--------------|-------|
-| 📦 Version   | [![npm](https://img.shields.io/npm/v/portapack.svg)](https://www.npmjs.com/package/portapack) |
-| ✅ Build     | [![Build Status](https://img.shields.io/github/actions/workflow/status/manicinc/portapack/ci.yml?branch=master)](https://github.com/manicinc/portapack/actions) |
-| 🧪 Coverage  | [![Codecov](https://img.shields.io/codecov/c/github/manicinc/portapack)](https://codecov.io/gh/manicinc/portapack) |
+| Metric      | Value                                                                                                                                                           |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 📦 Version  | [![npm](https://img.shields.io/npm/v/portapack.svg)](https://www.npmjs.com/package/portapack)                                                                   |
+| ✅ Build    | [![Build Status](https://img.shields.io/github/actions/workflow/status/manicinc/portapack/ci.yml?branch=master)](https://github.com/manicinc/portapack/actions) |
+| 🧪 Coverage | [![Codecov](https://img.shields.io/codecov/c/github/manicinc/portapack)](https://codecov.io/gh/manicinc/portapack)                                              |
 
 ## 📄 License
 
 MIT — Built by Manic.agency
-

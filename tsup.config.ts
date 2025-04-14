@@ -24,19 +24,19 @@ export default defineConfig([
       'cli-entry': 'src/cli/cli-entry.ts',
     },
     outDir: 'dist/cli',
-    format: ['cjs'],                     // ✅ Required for CLI to work with npx
+    format: ['cjs'], // ✅ Required for CLI to work with npx
     platform: 'node',
     target: 'node18',
     splitting: false,
-    clean: true,                         // Wipe dist/cli clean on each build
-    dts: false,                          // No types for CLI
+    clean: true, // Wipe dist/cli clean on each build
+    dts: false, // No types for CLI
     sourcemap: true,
     banner: {
-      js: '#!/usr/bin/env node',         // ✅ Required for CLI shebang
+      js: '#!/usr/bin/env node', // ✅ Required for CLI shebang
     },
     outExtension() {
       return {
-        js: '.cjs',                      // ✅ Required: prevents ESM misinterpretation
+        js: '.cjs', // ✅ Required: prevents ESM misinterpretation
       };
     },
     esbuildOptions(options) {
@@ -54,12 +54,12 @@ export default defineConfig([
       index: 'src/index.ts',
     },
     outDir: 'dist',
-    format: ['esm'],                     // ✅ Modern ESM output for consumers
+    format: ['esm'], // ✅ Modern ESM output for consumers
     platform: 'node',
     target: 'node18',
     splitting: false,
-    clean: false,                        // Don't wipe CLI build!
-    dts: true,                           // ✅ Generate TypeScript declarations
+    clean: false, // Don't wipe CLI build!
+    dts: true, // ✅ Generate TypeScript declarations
     sourcemap: true,
     outExtension() {
       return {
