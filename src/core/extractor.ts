@@ -2,7 +2,6 @@
  * @file src/core/extractor.ts
  * @description Handles discovery, resolution, fetching, and optional embedding of assets
  * linked from HTML and recursively within CSS (@import, url()). This is the heart of finding EVERYTHING.
- * @version 1.1.6 - Revised fetchAsset error handling logic for Axios errors.
  */
 
 // === Node.js Core Imports ===

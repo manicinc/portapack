@@ -1,5 +1,6 @@
 /**
- * Tests for the logger module
+ * @file tests/unit/utils/logger.test.ts
+ * @description Unit tests for the Logger module.
  */
 import { Logger } from '../../../src/utils/logger';
 import { LogLevel } from '../../../src/types';
@@ -59,7 +60,6 @@ describe('Logger', () => {
         it('creates a logger with specific log level', () => {
             const logger = new Logger(LogLevel.DEBUG);
             expect(logger).toBeDefined();
-            // REMOVED: @ts-expect-error Access private member for testing (No longer needed)
             expect((logger as any).level).toBe(LogLevel.DEBUG);
         });
 
@@ -197,7 +197,7 @@ describe('Logger', () => {
          });
     });
 
-    // --- NEW: Tests for static factory methods ---
+    // --- Tests for static factory methods ---
     describe('Static factory methods', () => {
         describe('Logger.fromVerboseFlag()', () => {
              it('creates logger with DEBUG level if verbose is true', () => {

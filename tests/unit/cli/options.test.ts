@@ -1,5 +1,3 @@
-// tests/unit/cli/options.test.ts
-
 import { describe, it, expect, afterEach } from '@jest/globals';
 // Import the function to test and necessary types
 import { parseOptions } from '../../../src/cli/options'; // Adjust path if needed
@@ -248,10 +246,6 @@ describe('🔧 CLI Options Parser (options.ts)', () => {
             expect(runParseOptions(['-r', '0']).recursive).toBe(0);
             expect(runParseOptions(['-r', '10']).recursive).toBe(10);
             expect(runParseOptions(['-r', 'abc']).recursive).toBe(true);
-
-            // --- FIX: Remove this line ---
-            // expect(runParseOptions(['-r', '-5']).recursive).toBe(true);
-            // ---------------------------
 
             // Add this line to ensure the flag-only case is tested:
             expect(runParseOptions(['-r']).recursive).toBe(true);

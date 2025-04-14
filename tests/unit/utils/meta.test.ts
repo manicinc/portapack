@@ -1,4 +1,7 @@
-// tests/unit/utils/meta.test.ts
+/**
+ * @file tests/unit/utils/meta.test.ts
+ * @description Unit tests for the bundle metadata.
+ */
 import { jest } from '@jest/globals';
 import { BuildTimer } from '../../../src/utils/meta';
 

@@ -2,8 +2,6 @@
  * @file index.ts
  * @description Public API surface for PortaPack.
  * Exposes the unified `pack()` method and advanced helpers like recursive crawling and multi-page bundling.
- * @version 1.0.0 - (Add version if applicable)
- * @date 2025-04-11
  */
 
 import { fetchAndPackWebPage as coreFetchAndPack, recursivelyBundleSite as coreRecursivelyBundleSite } from './core/web-fetcher';

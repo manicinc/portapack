@@ -45,13 +45,10 @@
     "portable",
     "minify",
     "packer",
-    "assets",
     "cli",
     "offline",
-    "webapp",
     "static-site",
-    "bundle",
-    "recursive"
+    "bundle"
   ],
   "author": "Manic.agency",
   "license": "MIT",

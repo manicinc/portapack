@@ -1,4 +1,8 @@
-// tests/unit/index.test.ts
+/**
+ * @file tests/unit/index.test.ts
+ * @description Unit tests for the API / functionality of PortaPack.
+ */
+
 
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import path from 'path';
@@ -89,19 +93,16 @@ describe('📦 PortaPack Index (Public API)', () => {
         mockSetPageCountFn = jest.fn();
         mockSetHtmlSizeFn.mockClear();
 
-        // --- Configure mocks using CASTS ('as any') before configuration methods ---
         (mockParseHTMLFn as any).mockImplementation(() => Promise.resolve(mockParsed));
         (mockExtractAssetsFn as any).mockImplementation(() => Promise.resolve(mockParsed));
         (mockMinifyAssetsFn as any).mockImplementation(() => Promise.resolve(mockParsed));
         (mockPackHTMLFn as any).mockReturnValue(mockPacked);
 
-        // FIX: Add string type hint and cast before mockImplementation
         (mockFetchAndPackWebPageFn as any).mockImplementation(async (url: string) => {
              // Return structure must match BuildResult
              return Promise.resolve({ html: mockPacked, metadata: { ...baseMetadata, input: url } as BundleMetadata });
         });
 
-        // FIX: Cast before mockImplementation
         (mockRecursivelyBundleSiteFn as any).mockImplementation(
             async (/* startUrl, outputFile, maxDepth, logger */) => {
                  mockSetPageCountFn(3);
@@ -210,10 +211,9 @@ describe('📦 PortaPack Index (Public API)', () => {
       it('✅ should throw on bad input file', async () => {
         const badPath = '/non/existent/file.html';
         const mockError = new Error('File not found');
-        // FIX: Cast before mockImplementationOnce
         (mockParseHTMLFn as any).mockImplementationOnce(() => Promise.reject(mockError));
 
-        // FIX: Use 'output' option
+        // Use 'output' option
         await expect(generatePortableHTML(badPath, { output: mockOutputPath }, logger)).rejects.toThrow(mockError);
 
         expect(mockParseHTMLFn).toHaveBeenCalledWith(badPath, logger);

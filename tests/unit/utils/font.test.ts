@@ -1,4 +1,7 @@
-// tests/unit/utils/font.test.ts
+/**
+ * @file tests/unit/utils/font.test.ts
+ * @description Unit tests for the font utils.
+ */
 
 import { describe, it, expect, jest, beforeEach, beforeAll } from '@jest/globals';
 
@@ -23,7 +26,6 @@ describe('🖋️ Font Utils', () => {
         it('returns octet-stream for unknown or missing extensions', () => { expect(getFontMimeType('font.xyz')).toBe('application/octet-stream'); /* etc */ });
     });
 
-    // --- FIX: Comment out the entire describe block for the failing async function ---
     /*
     describe('encodeFontToDataURI()', () => {
         // --- Mock Setup Variables ---

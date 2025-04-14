@@ -1,5 +1,3 @@
-// tests/unit/cli/cli.test.ts
-
 import { jest, describe, it, beforeEach, afterEach, expect } from '@jest/globals'; // Assuming beforeAll/afterAll aren't strictly needed for these tests unless used by setup
 
 // Import types

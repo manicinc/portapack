@@ -1,3 +1,8 @@
+/**
+ * @file tests/unit/utils/slugify.test.ts
+ * @description Unit tests for the slugify util.
+ */
+
 import { slugify } from '../../../src/utils/slugify'; // Adjust path if needed
 import { describe, it, expect } from '@jest/globals';
 

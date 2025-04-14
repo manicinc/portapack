@@ -4,7 +4,6 @@
  * to control output verbosity throughout the application (core, API, CLI).
  */
 
-// FIX: Use a regular import for the enum, not 'import type'
 import { LogLevel } from '../types';
 // Assuming LogLevel enum is defined and exported in '../types' like:
 // export enum LogLevel { NONE = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4 }

@@ -1,4 +1,3 @@
-// tests/unit/cli/cli-entry.test.ts
 import type { CLIResult } from '../../../src/types';
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 

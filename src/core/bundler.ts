@@ -1,7 +1,6 @@
 /**
  * @file bundler.ts
  * @description Core bundling functions to handle both single and multi-page HTML documents. This includes asset extraction, optional minification, and full inlining into a self-contained HTML file.
- * @version 1.3.0 // Assuming version based on previous context
  */
 
 import { dirname, resolve, sep as pathSeparator } from 'path';
@@ -219,7 +218,8 @@ export function bundleMultiPageHTML(pages: PageEntry[], logger?: Logger): string
     // (Ensure template IDs use `page-${slug}`)
     // (Ensure nav links use `href="#${slug}"` and `data-page="${slug}"`)
     // (Ensure router script uses `${defaultPageSlug}` correctly)
-    let output = `<!DOCTYPE html>
+    let output = `
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -235,78 +235,77 @@ export function bundleMultiPageHTML(pages: PageEntry[], logger?: Logger): string
     </style>
 </head>
 <body>
-    <nav id="main-nav">
-        ${validPages.map(p => {
-            const slug = slugMap.get(p.url)!; // Slug is guaranteed to exist here
-            const label = slug; // Use slug as label for simplicity
-            return `<a href="#${slug}" data-page="${slug}">${label}</a>`;
-        }).join('\n        ')}
-    </nav>
-    <div id="page-container"></div>
+<nav id="main-nav">
     ${validPages.map(p => {
-        const slug = slugMap.get(p.url)!;
-        // Basic sanitization/escaping might be needed for p.html if needed
-        return `<template id="page-${slug}">${p.html}</template>`;
-    }).join('\n    ')}
-    <script id="router-script">
-        document.addEventListener('DOMContentLoaded', function() {
-            const pageContainer = document.getElementById('page-container');
-            const navLinks = document.querySelectorAll('#main-nav a');
+        const slug = slugMap.get(p.url)!; // Slug is guaranteed to exist here
+        const label = slug; // Use slug as label for simplicity
+        return `<a href="#${slug}" data-page="${slug}">${label}</a>`;
+    }).join('\n        ')}
+</nav>
+<div id="page-container"></div>
+${validPages.map(p => {
+    const slug = slugMap.get(p.url)!;
+    // Basic sanitization/escaping might be needed for p.html if needed
+    return `<template id="page-${slug}">${p.html}</template>`;
+}).join('\n    ')}
+<script id="router-script">
+    document.addEventListener('DOMContentLoaded', function() {
+        const pageContainer = document.getElementById('page-container');
+        const navLinks = document.querySelectorAll('#main-nav a');
 
-            function navigateTo(slug) {
-                const template = document.getElementById('page-' + slug);
-                if (!template || !pageContainer) {
-                    console.warn('Navigation failed: Template or container not found for slug:', slug);
-                    // Maybe try navigating to default page? Or just clear container?
-                    if (pageContainer) pageContainer.innerHTML = '<p>Page not found.</p>';
-                    return;
-                }
-                // Clear previous content and append new content
-                pageContainer.innerHTML = ''; // Clear reliably
-                pageContainer.appendChild(template.content.cloneNode(true));
-
-                // Update active link styling
-                navLinks.forEach(link => {
-                    link.classList.toggle('active', link.getAttribute('data-page') === slug);
-                });
-
-                // Update URL hash without triggering hashchange if already correct
-                if (window.location.hash.substring(1) !== slug) {
-                    // Use pushState for cleaner history
-                    history.pushState({ slug: slug }, '', '#' + slug);
-                }
+        function navigateTo(slug) {
+            const template = document.getElementById('page-' + slug);
+            if (!template || !pageContainer) {
+                console.warn('Navigation failed: Template or container not found for slug:', slug);
+                // Maybe try navigating to default page? Or just clear container?
+                if (pageContainer) pageContainer.innerHTML = '<p>Page not found.</p>';
+                return;
             }
+            // Clear previous content and append new content
+            pageContainer.innerHTML = ''; // Clear reliably
+            pageContainer.appendChild(template.content.cloneNode(true));
 
-            // Handle back/forward navigation
-            window.addEventListener('popstate', (event) => {
-                let slug = window.location.hash.substring(1);
-                // If popstate event has state use it, otherwise fallback to hash or default
-                if (event && event.state && event.state.slug) { // Check event exists
-                    slug = event.state.slug;
-                }
-                // Ensure the target page exists before navigating, fallback to default slug
-                const targetSlug = document.getElementById('page-' + slug) ? slug : '${defaultPageSlug}';
-                navigateTo(targetSlug);
-            });
-
-            // Handle direct link clicks
+            // Update active link styling
             navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const slug = this.getAttribute('data-page');
-                    if (slug) navigateTo(slug);
-                });
+                link.classList.toggle('active', link.getAttribute('data-page') === slug);
             });
 
-            // Initial page load
-            const initialHash = window.location.hash.substring(1);
-            const initialSlug = document.getElementById('page-' + initialHash) ? initialHash : '${defaultPageSlug}';
-            navigateTo(initialSlug);
+            // Update URL hash without triggering hashchange if already correct
+            if (window.location.hash.substring(1) !== slug) {
+                // Use pushState for cleaner history
+                history.pushState({ slug: slug }, '', '#' + slug);
+            }
+        }
+
+        // Handle back/forward navigation
+        window.addEventListener('popstate', (event) => {
+            let slug = window.location.hash.substring(1);
+            // If popstate event has state use it, otherwise fallback to hash or default
+            if (event && event.state && event.state.slug) { // Check event exists
+                slug = event.state.slug;
+            }
+            // Ensure the target page exists before navigating, fallback to default slug
+            const targetSlug = document.getElementById('page-' + slug) ? slug : '${defaultPageSlug}';
+            navigateTo(targetSlug);
         });
-    </script>
+
+        // Handle direct link clicks
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const slug = this.getAttribute('data-page');
+                if (slug) navigateTo(slug);
+            });
+        });
+
+        // Initial page load
+        const initialHash = window.location.hash.substring(1);
+        const initialSlug = document.getElementById('page-' + initialHash) ? initialHash : '${defaultPageSlug}';
+        navigateTo(initialSlug);
+    });
+</script>
 </body>
 </html>`;
-
     logger?.info(`Multi-page bundle generated. Size: ${Buffer.byteLength(output, 'utf-8')} bytes.`);
     return output;
 }
