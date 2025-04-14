@@ -6,6 +6,7 @@
     "isolatedModules": false, // Often better to set false when using CommonJS/ts-jest
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "noEmit": true,
     "target": "ES2022", // Keep target if your Node version supports it

@@ -16,43 +16,32 @@ npm install -g portapack
 
 ## Command Syntax
 
-PortaPack supports two command styles for specifying input:
+The basic syntax for the PortaPack CLI is:
 
 ```bash
-# Positional argument style (recommended)
-portapack <path_or_url> [options]
-
-# Named argument style
-portapack --input <path_or_url> [options]
-# or using shorthand
-portapack -i <path_or_url> [options]
+portapack [input] [options]
 ```
 
-Both methods work identically - choose whichever you prefer.
+Where `[input]` is the path to a local HTML file or a remote URL.
 
 ## Options
 
 | Option | Shorthand | Description | Default |
 |--------|-----------|-------------|---------|
-| `<path_or_url>` or `--input <path_or_url>` | `-i` | Required. Input local file path or remote URL (http/https) to process. | - |
-| `--output <file>` | `-o` | Output file path for the bundled HTML. | `{input}.packed.html` |
+| `[input]` | | Required. Input local file path or remote URL (http/https) to process. | - |
+| `--output <file>` | `-o` | Output file path for the bundled HTML. | `{input-basename}.packed.html` |
+| `--recursive [depth]` | `-r` | Recursively bundle links up to depth. If depth omitted, defaults to true (no limit). Only applies to remote URLs. | `false` (disabled) |
+| `--max-depth <n>` | | Set maximum depth for recursive crawling (alternative to `-r <n>`). | - |
 | `--minify` | `-m` | Enable all minification (HTML, CSS, JS). | - |
 | `--no-minify` | | Disable all asset minification (HTML, CSS, JS). | `false` |
 | `--no-minify-html` | | Disable only HTML minification. | `false` |
 | `--no-minify-css` | | Disable only CSS minification. | `false` |
 | `--no-minify-js` | | Disable only JavaScript minification. | `false` |
-| `--recursive [depth]` | `-r` | Recursively bundle links up to depth. If depth omitted, defaults to 1. Only applies to remote URLs. | - (disabled) |
-| `--max-depth <n>` | | Set maximum depth for recursive crawling (alternative to `-r <n>`). | - |
-| `--base-url <url>` | `-b` | Base URL for resolving relative URLs found in the input HTML. | Input path/URL |
 | `--embed-assets` | `-e` | Embed external assets (CSS, JS, images, fonts) as data URIs or inline content. | `true` |
 | `--no-embed-assets` | | Keep external assets as links (requires network access when viewing). | `false` |
-| `--timeout <ms>` | `-t` | Network timeout in milliseconds for fetching remote resources. | `30000` (30 seconds) |
-| `--user-agent <string>` | `-U` | Custom User-Agent string for network requests. | Default Node.js agent |
-| `--include <glob>` | | Glob pattern for URLs to include during recursion (can be specified multiple times). | `**` (all) |
-| `--exclude <glob>` | | Glob pattern for URLs to exclude during recursion (can be specified multiple times). | - |
-| `--log-level <level>` | `-l` | Set logging level (debug, info, warn, error, silent). | `info` |
+| `--base-url <url>` | `-b` | Base URL for resolving relative URLs found in the input HTML. | Input path/URL |
+| `--log-level <level>` | | Set logging level (debug, info, warn, error, silent, none). | `info` |
 | `--verbose` | `-v` | Enable verbose logging (shortcut for `--log-level debug`). | `false` |
-| `--config <path>` | `-c` | Path to a configuration file (e.g., `.portapackrc.json`) to load options from. | - |
 | `--dry-run` | `-d` | Perform all steps except writing the output file. Logs intended actions. | `false` |
 | `--help` | `-h` | Show help information and exit. | - |
 | `--version` | | Show PortaPack CLI version number and exit. | - |
@@ -64,21 +53,13 @@ Both methods work identically - choose whichever you prefer.
 Bundle `index.html` into `bundle.html`:
 
 ```bash
-# Using positional argument style
 portapack ./index.html -o bundle.html
-
-# Using named argument style
-portapack -i ./index.html -o bundle.html
 ```
 
-Use default output name (`index.html.packed.html`):
+Use default output name (`index.packed.html`):
 
 ```bash
-# Using positional argument style
 portapack ./index.html
-
-# Using named argument style
-portapack -i ./index.html
 ```
 
 ### Web Page Bundling
@@ -86,11 +67,7 @@ portapack -i ./index.html
 Bundle a single remote webpage:
 
 ```bash
-# Using positional argument style
 portapack https://example.com -o example-bundle.html
-
-# Using named argument style
-portapack -i https://example.com -o example-bundle.html
 ```
 
 ### Recursive Bundling
@@ -111,15 +88,6 @@ Alternative using `--max-depth` option:
 
 ```bash
 portapack https://example.com --max-depth 2 -o site-bundle-depth2.html
-```
-
-Recursively bundle only blog posts, excluding images:
-
-```bash
-portapack https://example.com -r \
-  --include "/blog/**" \
-  --exclude "**/*.{jpg,png,gif}" \
-  -o blog-bundle.html
 ```
 
 ### Asset Handling
@@ -160,14 +128,6 @@ portapack ./index.html --no-minify-html -o selective-min.html
 portapack ./index.html --no-minify-js -o no-js-min.html
 ```
 
-### Advanced Network Options
-
-Bundle a remote page with a longer timeout and custom user agent:
-
-```bash
-portapack https://example.com -t 60000 -U "MyCustomBot/1.0" -o example-custom.html
-```
-
 ### Base URL for Relative Links
 
 Process a local file as if it were hosted at https://example.com:
@@ -198,14 +158,6 @@ See what files and assets would be processed without saving:
 portapack ./index.html --dry-run
 ```
 
-### Using a Configuration File
-
-Load options from a config file:
-
-```bash
-portapack -c ./.portapackrc.json
-```
-
 ### NPX Usage
 
 Use PortaPack without installing globally:
@@ -219,15 +171,10 @@ npx portapack ./index.html -o bundle.html
 | Code | Description |
 |------|-------------|
 | 0 | Success |
-| 1 | General Error (e.g., invalid options, file IO) |
-| 2 | Input Error (e.g., missing input, invalid URL) |
-| 3 | Network Error (e.g., fetch failed, timeout) |
-| 4 | Processing Error (e.g., parsing failed) |
-
-(Note: Specific error codes might vary)
+| 1 | Error |
 
 ## Related Resources
 
-- Getting Started (Link needs validation)
-- API Reference (Link needs validation)
-- Configuration Guide (Link needs validation)
+- [Getting Started](https://manicinc.github.io/portapack/getting-started)
+- [API Reference](https://manicinc.github.io/portapack/api/)
+- [Configuration Guide](https://manicinc.github.io/portapack/configuration)

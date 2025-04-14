@@ -23,11 +23,11 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
-      # - run: npm run test:ci
-      # - run: npm run lint
-      # - run: npm run format:check
-      - run: npm run build # for now we keep it simple to release
+      - run: npm run test:ci
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        
 # coverage:
 #   needs: build
 #   runs-on: ubuntu-latest

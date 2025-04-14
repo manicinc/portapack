@@ -2,7 +2,8 @@
 
 [![npm version](https://img.shields.io/npm/v/portapack.svg?style=for-the-badge&logo=npm&color=CB3837)](https://www.npmjs.com/package/portapack)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/manicinc/portapack/ci.yml?branch=master&style=for-the-badge&logo=github)](https://github.com/manicinc/portapack/actions)
-[![Coverage Status](https://img.shields.io/coveralls/github/manicinc/portapack?style=for-the-badge&logo=codecov)](https://coveralls.io/github/manicinc/portapack)
+[![Codecov](https://img.shields.io/codecov/c/github/manicinc/portapack?style=for-the-badge&logo=codecov)](https://codecov.io/gh/manicinc/portapack)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
 **PortaPack** bundles your entire website — HTML, CSS, JS, images, and fonts — into one  self-contained HTML file. Perfect for snapshots, demos, testing, and offline apps.
 
@@ -125,15 +126,6 @@ import {
 | `fetchAndPackWebPage()` | Just fetch HTML (no asset processing) |
 | `bundleMultiPageHTML()` | Combine multiple HTMLs with router |
 
-## 🧪 Use Cases
-
-- Archive pages for offline use
-- Create demo bundles without a web server
-- Simplify distribution of small apps
-- QA test static assets
-- Embed pages in PDFs or ebooks
-- Analyze asset weight impact
-
 ## 🤝 Contribute
 
 ```bash
@@ -146,10 +138,13 @@ npm run dev
 
 ## 📊 Project Health
 
-(Metrics auto-generated coming soon)
+| Metric       | Value |
+|--------------|-------|
+| 📦 Version   | [![npm](https://img.shields.io/npm/v/portapack.svg)](https://www.npmjs.com/package/portapack) |
+| ✅ Build     | [![Build Status](https://img.shields.io/github/actions/workflow/status/manicinc/portapack/ci.yml?branch=master)](https://github.com/manicinc/portapack/actions) |
+| 🧪 Coverage  | [![Codecov](https://img.shields.io/codecov/c/github/manicinc/portapack)](https://codecov.io/gh/manicinc/portapack) |
 
 ## 📄 License
 
-MIT — Built with ✨ by Manic Agency
+MIT — Built by Manic.agency
 
-*Open Source Empowering Designers and Developers 🖥️*

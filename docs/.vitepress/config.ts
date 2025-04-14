@@ -48,7 +48,6 @@ export default defineConfig({
           { text: 'Advanced Usage', link: '/advanced' }
         ]
       },
-      { text: 'Demo', link: '/demo' },
       { text: 'Contributing', link: '/contributing' }
     ],
 

@@ -282,8 +282,8 @@ describe('CLI Runner Logic', () => {
         expect(result.exitCode).toBe(0);
         // Standard output should still show success
         expect(result.stdout).toContain('✅ Packed: index.html → output.html');
+        expect(result.stderr).toMatch(/⚠️\s+1\s+warning\(s\):/);
         // Warnings should be logged to stderr
-        expect(result.stderr).toContain('⚠️  1 warning(s):');
         expect(result.stderr).toContain(`- ${warningMessage}`);
     });
 
