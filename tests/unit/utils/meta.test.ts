@@ -20,11 +20,10 @@ describe('BuildTimer', () => {
     const html = '<html><body>Test</body></html>';
     // Simulate passing extra metadata calculated elsewhere
     const metadata = timer.finish(html, {
-        assetCount: 5,
-        pagesBundled: 3,
-        errors: ['External warning'] // Add an external error to test merging
+      assetCount: 5,
+      pagesBundled: 3,
+      errors: ['External warning'], // Add an external error to test merging
     });
-
 
     expect(metadata.input).toBe(mockInput);
     expect(metadata.assetCount).toBe(5);
@@ -46,28 +45,27 @@ describe('BuildTimer', () => {
     expect(result.assetCount).toBe(0); // Check the explicitly passed 0
   });
 
-   // Add a test case to check internal assetCount if not provided in extra
-   it('uses internal asset count if not provided in extra', () => {
-      const timer = new BuildTimer(mockInput);
-      timer.setAssetCount(10); // Set internal count
-      const result = timer.finish('html'); // Don't provide assetCount in extra
-      expect(result.assetCount).toBe(10);
-   });
+  // Add a test case to check internal assetCount if not provided in extra
+  it('uses internal asset count if not provided in extra', () => {
+    const timer = new BuildTimer(mockInput);
+    timer.setAssetCount(10); // Set internal count
+    const result = timer.finish('html'); // Don't provide assetCount in extra
+    expect(result.assetCount).toBe(10);
+  });
 
-    // Add a test case to check internal pageCount if not provided in extra
-    it('uses internal page count if not provided in extra', () => {
-      const timer = new BuildTimer(mockInput);
-      timer.setPageCount(2); // Set internal count
-      const result = timer.finish('html'); // Don't provide pageCount in extra
-      expect(result.pagesBundled).toBe(2);
-   });
+  // Add a test case to check internal pageCount if not provided in extra
+  it('uses internal page count if not provided in extra', () => {
+    const timer = new BuildTimer(mockInput);
+    timer.setPageCount(2); // Set internal count
+    const result = timer.finish('html'); // Don't provide pageCount in extra
+    expect(result.pagesBundled).toBe(2);
+  });
 
-    // Add a test case to check internal errors if not provided in extra
-    it('uses internal errors if not provided in extra', () => {
-      const timer = new BuildTimer(mockInput);
-      timer.addError("Internal Error"); // Add internal error
-      const result = timer.finish('html'); // Don't provide errors in extra
-      expect(result.errors).toEqual(["Internal Error"]);
-   });
-
+  // Add a test case to check internal errors if not provided in extra
+  it('uses internal errors if not provided in extra', () => {
+    const timer = new BuildTimer(mockInput);
+    timer.addError('Internal Error'); // Add internal error
+    const result = timer.finish('html'); // Don't provide errors in extra
+    expect(result.errors).toEqual(['Internal Error']);
+  });
 });

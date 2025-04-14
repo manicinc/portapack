@@ -16,12 +16,18 @@ export function getFontMimeType(fontUrl: string): string {
   const ext = path.extname(fontUrl).toLowerCase().replace('.', '');
 
   switch (ext) {
-    case 'woff': return 'font/woff';
-    case 'woff2': return 'font/woff2';
-    case 'ttf': return 'font/ttf';
-    case 'otf': return 'font/otf';
-    case 'eot': return 'application/vnd.ms-fontobject';
-    default: return 'application/octet-stream';
+    case 'woff':
+      return 'font/woff';
+    case 'woff2':
+      return 'font/woff2';
+    case 'ttf':
+      return 'font/ttf';
+    case 'otf':
+      return 'font/otf';
+    case 'eot':
+      return 'application/vnd.ms-fontobject';
+    default:
+      return 'application/octet-stream';
   }
 }
 

@@ -16,6 +16,7 @@ npm install -g commitizen
 ## 🚀 Getting Started
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/manicinc/portapack.git
    cd portapack
@@ -38,17 +39,18 @@ npm run dev
 ```
 
 This command simultaneously runs:
+
 - TypeScript rebuild watcher
 - Documentation server
 - Test runner
 
 ### Specific Development Scripts
 
-| Command | Purpose |
-|---------|---------|
+| Command             | Purpose                      |
+| ------------------- | ---------------------------- |
 | `npm run dev:build` | Watch and rebuild TypeScript |
-| `npm run dev:docs` | Start documentation server |
-| `npm run dev:test` | Run tests in watch mode |
+| `npm run dev:docs`  | Start documentation server   |
+| `npm run dev:test`  | Run tests in watch mode      |
 
 ## 🧪 Testing Strategies
 
@@ -89,6 +91,7 @@ npm run build
 ```
 
 Builds include:
+
 - TypeScript compilation
 - API documentation generation
 - Documentation site build

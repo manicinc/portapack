@@ -19,7 +19,7 @@ if (require.main === module) {
       if (stderr) process.stderr.write(stderr);
       process.exit(Number(exitCode));
     })
-    .catch((err) => {
+    .catch(err => {
       console.error('💥 Unhandled CLI error:', err);
       process.exit(1);
     });

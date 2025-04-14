@@ -8,25 +8,29 @@ import { describe, it, expect, jest, beforeEach, beforeAll } from '@jest/globals
 // Import only synchronous functions or types needed outside the async describe block
 import { getFontMimeType /*, encodeFontToDataURI */ } from '../../../src/utils/font'; // Commented out async import
 
-
 describe('🖋️ Font Utils', () => {
-
-    // Tests for the synchronous function can remain outside
-    describe('getFontMimeType()', () => {
-        it('returns correct MIME for common formats', () => {
-            expect(getFontMimeType('font.woff')).toBe('font/woff');
-            expect(getFontMimeType('font.woff2')).toBe('font/woff2');
-            expect(getFontMimeType('font.ttf')).toBe('font/ttf');
-            expect(getFontMimeType('font.otf')).toBe('font/otf');
-            expect(getFontMimeType('font.eot')).toBe('application/vnd.ms-fontobject');
-            expect(getFontMimeType('font.svg')).toBe('application/octet-stream'); // Default
-        });
-        it('handles uppercase extensions', () => { expect(getFontMimeType('font.WOFF2')).toBe('font/woff2'); /* etc */ });
-        it('handles file paths correctly', () => { expect(getFontMimeType('/path/to/font.woff2')).toBe('font/woff2'); /* etc */ });
-        it('returns octet-stream for unknown or missing extensions', () => { expect(getFontMimeType('font.xyz')).toBe('application/octet-stream'); /* etc */ });
+  // Tests for the synchronous function can remain outside
+  describe('getFontMimeType()', () => {
+    it('returns correct MIME for common formats', () => {
+      expect(getFontMimeType('font.woff')).toBe('font/woff');
+      expect(getFontMimeType('font.woff2')).toBe('font/woff2');
+      expect(getFontMimeType('font.ttf')).toBe('font/ttf');
+      expect(getFontMimeType('font.otf')).toBe('font/otf');
+      expect(getFontMimeType('font.eot')).toBe('application/vnd.ms-fontobject');
+      expect(getFontMimeType('font.svg')).toBe('application/octet-stream'); // Default
     });
+    it('handles uppercase extensions', () => {
+      expect(getFontMimeType('font.WOFF2')).toBe('font/woff2'); /* etc */
+    });
+    it('handles file paths correctly', () => {
+      expect(getFontMimeType('/path/to/font.woff2')).toBe('font/woff2'); /* etc */
+    });
+    it('returns octet-stream for unknown or missing extensions', () => {
+      expect(getFontMimeType('font.xyz')).toBe('application/octet-stream'); /* etc */
+    });
+  });
 
-    /*
+  /*
     describe('encodeFontToDataURI()', () => {
         // --- Mock Setup Variables ---
         const mockReadFileImplementation = jest.fn();
@@ -78,6 +82,5 @@ describe('🖋️ Font Utils', () => {
         });
     });
     */
-    // ---------------------------------------------------------------------------------
-
+  // ---------------------------------------------------------------------------------
 });

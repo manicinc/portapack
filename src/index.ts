@@ -4,7 +4,10 @@
  * Exposes the unified `pack()` method and advanced helpers like recursive crawling and multi-page bundling.
  */
 
-import { fetchAndPackWebPage as coreFetchAndPack, recursivelyBundleSite as coreRecursivelyBundleSite } from './core/web-fetcher';
+import {
+  fetchAndPackWebPage as coreFetchAndPack,
+  recursivelyBundleSite as coreRecursivelyBundleSite,
+} from './core/web-fetcher';
 import { parseHTML } from './core/parser';
 import { extractAssets } from './core/extractor';
 import { minifyAssets } from './core/minifier';
@@ -54,10 +57,10 @@ export async function pack(
   // Check if it contains '://' but isn't http(s) -> likely unsupported protocol
   // Allow anything else (including relative/absolute paths without explicit protocols)
   if (!isHttp && /:\/\//.test(input) && !input.startsWith('file://')) {
-       const errorMsg = `Unsupported protocol or input type: ${input}`;
-       logger.error(errorMsg);
-       throw new Error(errorMsg);
-   }
+    const errorMsg = `Unsupported protocol or input type: ${input}`;
+    logger.error(errorMsg);
+    throw new Error(errorMsg);
+  }
 
   const isRemote = /^https?:\/\//i.test(input); // Check again after validation
   const recursive = options.recursive === true || typeof options.recursive === 'number';
@@ -99,8 +102,8 @@ export async function generatePortableHTML(
       logger.info(`Finished fetching and packing remote page: ${input}`);
       return { html: result.html, metadata };
     } catch (error: any) {
-        logger.error(`Error fetching remote page ${input}: ${error.message}`);
-        throw error;
+      logger.error(`Error fetching remote page ${input}: ${error.message}`);
+      throw error;
     }
   }
 
@@ -119,8 +122,8 @@ export async function generatePortableHTML(
     logger.info(`Finished processing local file: ${input}`);
     return { html: finalHtml, metadata };
   } catch (error: any) {
-      logger.error(`Error processing local file ${input}: ${error.message}`);
-      throw error;
+    logger.error(`Error processing local file ${input}: ${error.message}`);
+    throw error;
   }
 }
 
@@ -145,9 +148,9 @@ export async function generateRecursivePortableHTML(
   const timer = new BuildTimer(url);
 
   if (!/^https?:\/\//i.test(url)) {
-      const errorMsg = `Invalid URL for recursive bundling. Must start with http:// or https://. Received: ${url}`;
-      logger.error(errorMsg);
-      throw new Error(errorMsg);
+    const errorMsg = `Invalid URL for recursive bundling. Must start with http:// or https://. Received: ${url}`;
+    logger.error(errorMsg);
+    throw new Error(errorMsg);
   }
 
   logger.info(`Starting recursive bundle for ${url} up to depth ${depth}`);
@@ -164,8 +167,8 @@ export async function generateRecursivePortableHTML(
     logger.info(`Finished recursive bundle for ${url}. Bundled ${pages} pages.`);
     return { html, metadata };
   } catch (error: any) {
-      logger.error(`Error during recursive bundle for ${url}: ${error.message}`);
-      throw error;
+    logger.error(`Error during recursive bundle for ${url}: ${error.message}`);
+    throw error;
   }
 }
 

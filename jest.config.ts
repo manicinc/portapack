@@ -36,9 +36,9 @@ const config: Config = {
       'ts-jest',
       {
         // useESM: false, // Explicitly false or remove this line entirely
-        tsconfig: './tsconfig.jest.json' // Ensure this tsconfig targets CommonJS
-      }
-    ]
+        tsconfig: './tsconfig.jest.json', // Ensure this tsconfig targets CommonJS
+      },
+    ],
   },
   /**
    * Treat `.ts` files as ESM modules.
@@ -54,7 +54,7 @@ const config: Config = {
     // Keep absolute path alias
     '^portapack(.*)$': '<rootDir>/src$1',
     // Mock path support
-    '^__mocks__/(.*)$': '<rootDir>/__mocks__/$1'
+    '^__mocks__/(.*)$': '<rootDir>/__mocks__/$1',
   },
 
   /**
@@ -65,7 +65,7 @@ const config: Config = {
     '!src/**/*.d.ts',
     '!src/**/*.test.ts',
     '!src/types.ts',
-    '!src/cli/cli-entry.ts'
+    '!src/cli/cli-entry.ts',
   ],
 
   /**
@@ -93,10 +93,7 @@ const config: Config = {
   /**
    * Type-ahead filters for watch mode
    */
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname'
-  ],
+  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
 
   /**
    * Don't error if no tests found (for initial development)
@@ -106,9 +103,7 @@ const config: Config = {
   /**
    * Ignore specific paths in watch mode
    */
-  watchPathIgnorePatterns: [
-    path.join('<rootDir>', 'tests', '__fixtures__', 'output')
-  ],
+  watchPathIgnorePatterns: [path.join('<rootDir>', 'tests', '__fixtures__', 'output')],
 
   /**
    * Mock implementations
