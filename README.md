@@ -5,6 +5,10 @@
 [![Codecov](https://img.shields.io/codecov/c/github/manicinc/portapack?style=for-the-badge&logo=codecov)](https://codecov.io/gh/manicinc/portapack)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/manicinc/portapack/master/docs/portapack-transparentpng" alt="PortaPack Logo" width="200"/>
+</p>
+
 **PortaPack** bundles your entire website — HTML, CSS, JS, images, and fonts — into one  self-contained HTML file. Perfect for snapshots, demos, testing, and offline apps.
 
 *Minimal input. Maximal output.*
