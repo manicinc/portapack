@@ -9,15 +9,16 @@ export default defineConfig({
   lastUpdated: true,
   
   head: [
-    ['link', { rel: 'icon', href: '/favicon.png' }],
+    ['link', { rel: 'icon', href: '/portapack/favicon.ico' }],
     ['meta', { name: 'og:title', content: 'PortaPack' }],
     ['meta', { name: 'og:description', content: 'Bundle & Minify HTML into a Single Portable File' }],
-    ['meta', { name: 'og:image', content: '/og-image.png' }],
+    ['meta', { name: 'og:image', content: '/portapack/portapack.png' }], // Updated to use your non-transparent logo
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }]
   ],
+  
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/portapack-transparent.png', // This path is relative to the public directory
     
     socialLinks: [
       { icon: 'github', link: 'https://github.com/manicinc/portapack' },

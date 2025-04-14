@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](./LICENSE)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/manicinc/portapack/master/docs/portapack-transparent.png" alt="PortaPack Logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/manicinc/portapack/master/docs/assets/portapack-transparent.png" alt="PortaPack Logo" width="200"/>
 </p>
 
 **PortaPack** bundles your entire website — HTML, CSS, JS, images, and fonts — into one  self-contained HTML file. Perfect for snapshots, demos, testing, and offline apps.
