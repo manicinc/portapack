@@ -14,20 +14,19 @@ import type { OpenMode } from 'node:fs';
 
 // --- Mock Setup ---
 // Define mock function first
-const mockReadFileFn =
-  jest.fn<
-    (
-      path: PathLike | FileHandle,
-      options?:
-        | {
-            encoding: BufferEncoding | null;
-            flag?: OpenMode | undefined;
-            signal?: AbortSignal | undefined;
-          }
-        | BufferEncoding
-        | null
-    ) => Promise<string | Buffer>
-  >(); // Match fs/promises signature
+const mockReadFileFn = jest.fn<
+  (
+    path: PathLike | FileHandle,
+    options?:
+      | {
+          encoding: BufferEncoding | null;
+          flag?: OpenMode | undefined;
+          signal?: AbortSignal | undefined;
+        }
+      | BufferEncoding
+      | null
+  ) => Promise<string | Buffer>
+>(); // Match fs/promises signature
 
 // Mock the 'fs/promises' module *before* importing parser.ts
 jest.mock('fs/promises', () => ({

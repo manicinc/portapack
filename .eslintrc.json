@@ -10,8 +10,8 @@
     "ecmaVersion": "latest", // Use the latest ECMAScript features
     "sourceType": "module" // Use ES modules, matching your package.json "type": "module"
     // "project": "./tsconfig.json" // Uncomment this line if you want to enable rules that require type information.
-                                  // This can provide more powerful linting but might slow down linting.
-                                  // Ensure your tsconfig.json is correctly set up if you enable this.
+    // This can provide more powerful linting but might slow down linting.
+    // Ensure your tsconfig.json is correctly set up if you enable this.
   },
 
   // Defines the global environments available.
@@ -49,13 +49,10 @@
     // --- Add specific rule overrides here if needed ---
     // Example: Warn about unused variables, but allow if prefixed with _
     // "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-
     // Example: Warn instead of error for console logs
     // "no-console": "warn",
-
     // You can turn off specific rules if they are too noisy or don't fit your style:
     // "@typescript-eslint/no-explicit-any": "off",
-
     // Add any other custom rules or overrides here.
   },
 
