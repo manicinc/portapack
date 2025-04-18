@@ -117,7 +117,7 @@ For details, see the [CLI Reference](https://manicinc.github.io/portapack/cli).
 
 - 📖 [Explore CLI Options](https://manicinc.github.io/portapack/cli)
 - 🛠 [Advanced Configuration](https://manicinc.github.io/portapack/configuration)
-- 💻 [API Reference](https://manicinc.github.io/portapack/api/)
+- 💻 [API Reference](https://manicinc.github.io/portapack/api/README.html)
 
 ## Troubleshooting
 

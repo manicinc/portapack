@@ -73,7 +73,6 @@ export class BuildTimer {
     const outputSize = Buffer.byteLength(html || '', 'utf-8');
 
     // Combine internal errors with any errors passed in 'extra', avoiding duplicates
-    // FIX: Ensure extra.errors is treated as an empty array if undefined/null
     const combinedErrors = Array.from(new Set([...this.errors, ...(extra?.errors ?? [])]));
 
     const finalMetadata: BundleMetadata = {

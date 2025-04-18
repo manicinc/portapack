@@ -86,7 +86,6 @@ describe('📦 PortaPack Index (Public API)', () => {
 
   // Base metadata without input/outputFile
   const baseMetadata: Omit<BundleMetadata, 'input'> = {
-    // FIX: Removed outputFile
     assetCount: 0,
     outputSize: mockPacked.length,
     buildTimeMs: 100,
@@ -124,7 +123,6 @@ describe('📦 PortaPack Index (Public API)', () => {
       async (/* startUrl, outputFile, maxDepth, logger */) => {
         mockSetPageCountFn(3);
         // Return structure expected by generateRecursivePortableHTML
-        // FIX: Cast return value to satisfy Promise<never> if needed, although mockImplementation often avoids this
         return Promise.resolve({ html: mockPacked, pages: 3 });
       }
     );
@@ -137,7 +135,6 @@ describe('📦 PortaPack Index (Public API)', () => {
     it('✅ delegates to generatePortableHTML for local files', async () => {
       expectedLocalMetadata = { ...baseMetadata, input: mockHtmlPath };
       mockFinishFn.mockReturnValueOnce(expectedLocalMetadata);
-      // FIX: Use 'output' option
       const result = await pack(mockHtmlPath, { output: mockOutputPath, loggerInstance: logger });
       expect(mockParseHTMLFn).toHaveBeenCalledWith(mockHtmlPath, expect.any(Logger));
       expect(result.html).toBe(mockPacked);
@@ -148,7 +145,6 @@ describe('📦 PortaPack Index (Public API)', () => {
       const remoteUrl = `${mockRemoteUrl}/page`;
       expectedRemoteMetadata = { ...baseMetadata, input: remoteUrl };
       mockFinishFn.mockReturnValueOnce(expectedRemoteMetadata);
-      // FIX: Use mockImplementationOnce with cast for specific return value
       (mockFetchAndPackWebPageFn as any).mockImplementationOnce(async () =>
         Promise.resolve({
           html: mockPacked,
@@ -156,7 +152,6 @@ describe('📦 PortaPack Index (Public API)', () => {
         })
       );
 
-      // FIX: Use 'output' option
       const result = await pack(remoteUrl, {
         recursive: false,
         output: mockOutputPath,
@@ -173,7 +168,6 @@ describe('📦 PortaPack Index (Public API)', () => {
       expectedRecursiveMetadata = { ...baseMetadata, input: remoteUrl, pagesBundled: 3 };
       mockFinishFn.mockReturnValueOnce(expectedRecursiveMetadata);
 
-      // FIX: Use 'output' option
       const result = await pack(remoteUrl, {
         recursive: true,
         output: mockOutputPath,
@@ -194,7 +188,6 @@ describe('📦 PortaPack Index (Public API)', () => {
       const remoteUrl = `${mockRemoteUrl}/site`;
       expectedRecursiveMetadata = { ...baseMetadata, input: remoteUrl, pagesBundled: 3 };
       mockFinishFn.mockReturnValueOnce(expectedRecursiveMetadata);
-      // FIX: Use 'output' option
       await pack(remoteUrl, { recursive: 5, output: mockOutputPath, loggerInstance: logger });
 
       expect(mockRecursivelyBundleSiteFn).toHaveBeenCalledWith(
@@ -206,11 +199,9 @@ describe('📦 PortaPack Index (Public API)', () => {
     });
 
     it('✅ throws on unsupported protocols (e.g., ftp)', async () => {
-      // FIX: Use 'output' option
       await expect(pack('ftp://weird.site', { output: mockOutputPath })).rejects.toThrow(
         /unsupported protocol or input type/i
       );
-      // ... other assertions ...
     });
   });
 
@@ -219,7 +210,6 @@ describe('📦 PortaPack Index (Public API)', () => {
     it('✅ should bundle local HTML with all core steps', async () => {
       expectedLocalMetadata = { ...baseMetadata, input: mockHtmlPath };
       mockFinishFn.mockReturnValueOnce(expectedLocalMetadata);
-      // FIX: Use 'output' option
       const result = await generatePortableHTML(mockHtmlPath, { output: mockOutputPath }, logger);
 
       expect(mockParseHTMLFn).toHaveBeenCalledWith(mockHtmlPath, logger);
@@ -243,12 +233,10 @@ describe('📦 PortaPack Index (Public API)', () => {
       mockFinishFn.mockReturnValueOnce(expectedRemoteMetadata);
       // Configure fetch mock to return specific metadata
       const fetcherReturnMetadata = { ...baseMetadata, input: remoteUrl };
-      // FIX: Cast needed before configuration method
       (mockFetchAndPackWebPageFn as any).mockImplementationOnce(async () =>
         Promise.resolve({ html: mockPacked, metadata: fetcherReturnMetadata })
       );
 
-      // FIX: Use 'output' option
       const result = await generatePortableHTML(remoteUrl, { output: mockOutputPath }, logger);
 
       expect(mockFetchAndPackWebPageFn).toHaveBeenCalledWith(remoteUrl, logger);
@@ -279,10 +267,8 @@ describe('📦 PortaPack Index (Public API)', () => {
       expectedRecursiveMetadata = { ...baseMetadata, input: remoteUrl, pagesBundled: 3 };
       mockFinishFn.mockReturnValueOnce(expectedRecursiveMetadata);
       // Configure the core function mock return value for this test
-      // FIX: Cast before configuration method if needed for specific return
       (mockRecursivelyBundleSiteFn as any).mockResolvedValueOnce({ html: mockPacked, pages: 3 });
 
-      // FIX: Use 'output' option
       const result = await generateRecursivePortableHTML(
         remoteUrl,
         2,
