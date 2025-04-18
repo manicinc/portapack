@@ -7,6 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
+
 // Use standard require for core modules in CJS context if needed
 // const path = require('path');
 // const fs = require('fs');
@@ -23,8 +24,6 @@ import type { CLIResult, BundleOptions, BundleMetadata, CLIOptions } from '../ty
  */
 function getPackageJson(): Record<string, any> {
   try {
-    // FIX: Use require.resolve which works in CommonJS to find the package path
-    // It resolves relative to the location of this file or the node_modules structure
     // Assumes 'portapack' is the package name defined in package.json
     // We need the package.json itself, so resolve 'portapack/package.json'
     // Use __dirname if available in CJS context, otherwise try relative from cwd as fallback
@@ -70,7 +69,6 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
     stderr += args.join(' ') + '\n';
   };
 
-  // FIX: Use the correct type CLIOptions which includes 'input'
   let cliOptions: CLIOptions | undefined;
   try {
     // Get the fully parsed options object which includes 'input'
@@ -114,7 +112,6 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
       return { stdout, stderr, exitCode: 0 };
     }
 
-    // FIX: Call pack with input as the first argument, and the rest of the options as the second.
     // The cliOptions object should be compatible with PackOptions expected by pack.
     const result = await pack(cliOptions.input, cliOptions);
 

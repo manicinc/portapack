@@ -132,7 +132,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     );
   });
   it('returns minimal HTML shell if input htmlContent is empty or invalid', () => {
-    /* ... as before ... */
     const expectedShell = '<!DOCTYPE html><html><head><base href="./"></head><body></body></html>';
     const emptyParsed: ParsedHTML = { htmlContent: '', assets: [] };
     const resultEmpty = packHTML(emptyParsed, mockLogger);
@@ -150,7 +149,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     );
   });
   it('escapes closing script tags in JS content', () => {
-    /* ... as before ... */
     const assets: Asset[] = [{ type: 'js', url: trickyJsUrl, content: jsWithScriptTag }];
     const html = `<html><head></head><body><script src="${trickyJsUrl}"></script></body></html>`;
     const parsed: ParsedHTML = { htmlContent: html, assets: assets };
@@ -162,7 +160,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     expect(scriptContent).not.toContain('</script>');
   });
   it('preserves other attributes on inlined script tags', () => {
-    /* ... as before ... */
     const assets: Asset[] = [{ type: 'js', url: jsUrl, content: jsContent }];
     const html = `<html><head></head><body><script src="${jsUrl}" type="module" defer data-custom="value"></script></body></html>`;
     const parsed: ParsedHTML = { htmlContent: html, assets: assets };
@@ -177,7 +174,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     expect(scriptTag.html()).toContain(jsContent);
   });
   it('handles HTML fragment without <html> tag, creating full structure', () => {
-    /* ... as before ... */
     const relevantAssets = sampleAssets.filter(a => a.url === cssUrl);
     const parsedInput: ParsedHTML = { htmlContent: fragmentHtmlNoHtmlTag, assets: relevantAssets };
     const result = packHTML(parsedInput, mockLogger);
@@ -194,7 +190,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     );
   });
   it('handles HTML with <html> but no <head> tag', () => {
-    /* ... as before ... */
     const relevantAssets = sampleAssets.filter(a => a.url === jsUrl);
     const parsedInput: ParsedHTML = { htmlContent: htmlWithHtmlNoHeadTag, assets: relevantAssets };
     const result = packHTML(parsedInput, mockLogger);
@@ -214,7 +209,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     );
   });
   it('handles CSS assets where content is already a data URI using @import', () => {
-    /* ... as before ... */
     const html = `<html><head><link rel="stylesheet" href="${dataUriCssUrl}"></head><body></body></html>`;
     const relevantAssets = sampleAssets.filter(a => a.url === dataUriCssUrl);
     const parsed: ParsedHTML = { htmlContent: html, assets: relevantAssets };
@@ -228,7 +222,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     );
   });
   it('inlines src attributes for video, audio, and source tags', () => {
-    /* ... as before ... */
     const html = `
             <html><head></head><body>
                 <video src="${videoSrcUrl}"></video>
@@ -253,7 +246,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     expect(mockLoggerWarnFn).not.toHaveBeenCalled();
   });
   it('inlines standard CSS correctly', () => {
-    /* ... as before ... */
     const html = `<html><head><link rel="stylesheet" href="${cssUrl}"></head><body></body></html>`;
     const relevantAssets = sampleAssets.filter(a => a.url === cssUrl);
     const parsed: ParsedHTML = { htmlContent: html, assets: relevantAssets };
@@ -268,7 +260,6 @@ describe('📦 HTML Packer - packHTML()', () => {
     );
   });
   it('inlines images/posters correctly', () => {
-    /* ... as before ... */
     const html = `
             <html><head></head><body>
                 <img src="${imgUrl}">

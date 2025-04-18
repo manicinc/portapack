@@ -354,9 +354,12 @@ describe('🧩 Core Bundler', () => {
     });
 
     it('should throw if all pages are invalid entries', () => {
-      // @ts-expect-error - Testing invalid input array elements
+      // Cast the intentionally invalid array to 'any' to bypass type checking for this test
       expect(() =>
-        bundleMultiPageHTML([null, undefined, {}, { url: 'nohtml' }, { html: 'nourl' }], mockLogger)
+        bundleMultiPageHTML(
+          [null, undefined, {}, { url: 'nohtml' }, { html: 'nourl' }] as any, // <-- Cast here
+          mockLogger
+        )
       ).toThrow(/No valid page entries/);
       expect(mockLoggerErrorSpy).toHaveBeenCalled();
     });

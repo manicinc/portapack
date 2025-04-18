@@ -34,7 +34,6 @@ const BINARY_ASSET_TYPES: Set<Asset['type']> = new Set(['image', 'font', 'video'
 const MAX_ASSET_EXTRACTION_ITERATIONS = 1000;
 
 // === Helper Functions ===
-
 /**
  * Custom type for Node.js error objects with a `code` property.
  */
@@ -329,9 +328,6 @@ async function fetchAsset(
     // --- Handle Errors During Fetch/Read ---
     const failedId =
       protocol === 'file:' ? path.normalize(fileURLToPath(resolvedUrl)) : resolvedUrl.href;
-    // console.error(`[DEBUG fetchAsset] CAUGHT Error for ${failedId}. Type: ${Object.prototype.toString.call(error)}, Constructor: ${error?.constructor?.name}, isAxiosError property: ${(error as any)?.isAxiosError}, Code: ${(error as any)?.code}`); // Keep for debugging if needed
-
-    // *** FIXED LOGIC: Check for AxiosError using its property *before* generic instanceof Error ***
     if ((protocol === 'http:' || protocol === 'https:') && (error as any)?.isAxiosError === true) {
       const axiosError = error as AxiosError; // Cast for easier property access
       const status = axiosError.response?.status ?? 'N/A';
@@ -655,7 +651,6 @@ export async function extractAssets(
             }
           } else {
             // Decoding failed or was lossy
-            // Fixed log message: Added "asset" after type.
             logger?.warn(
               `Could not decode ${asset.type} asset ${asset.url} as valid UTF-8 text.${embedAssets ? ' Falling back to base64 data URI.' : ''}`
             );

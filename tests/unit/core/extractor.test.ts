@@ -686,7 +686,6 @@ describe('extractAssets', () => {
         `Permission denied (EACCES) reading asset: ${normalizePath(filePaths.unreadable)}`
       )
     );
-    // *** CORRECTED EXPECTATION ***: Verify readFile was called with ONLY the path argument
     expect(mockReadFile).toHaveBeenCalledWith(normalizePath(filePaths.unreadable));
   });
 
@@ -750,7 +749,6 @@ describe('extractAssets', () => {
     expect(result.assets[0].content).toEqual(
       `data:text/css;base64,${invalidUtf8Buffer.toString('base64')}`
     );
-    // *** CORRECTED EXPECTATION (from previous step) ***: Expect the single, combined warning message
     expect(mockLoggerWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining(
         `Could not decode css asset ${expectedUrl} as valid UTF-8 text. Falling back to base64 data URI.`
@@ -834,14 +832,11 @@ describe('extractAssets', () => {
     const result = await extractAssets(parsed, true, mockBaseFileUrl, mockLogger);
 
     expect(result.assets.length).toBeGreaterThan(0);
-    // *** CORRECTED EXPECTATION ***: Check that the ERROR logger was called exactly TWICE
     expect(mockLoggerErrorSpy).toHaveBeenCalledTimes(2);
-    // *** CORRECTED EXPECTATION ***: Check that the FIRST error message contains the loop limit text
     expect(mockLoggerErrorSpy).toHaveBeenNthCalledWith(
       1,
       expect.stringContaining('Asset extraction loop limit hit')
     );
-    // *** CORRECTED EXPECTATION ***: Check the SECOND error message contains the remaining queue text
     expect(mockLoggerErrorSpy).toHaveBeenNthCalledWith(
       2,
       expect.stringContaining('Remaining queue sample')
@@ -859,7 +854,6 @@ describe('extractAssets', () => {
     // Expect only the CSS file itself to be in the final assets
     expect(result.assets).toHaveLength(1);
     expect(result.assets[0].url).toEqual(resolveUrl('data-uri.css', mockBaseFileUrl));
-    // *** CORRECTED EXPECTATION ***: Verify the CSS file was read (with only one argument)
     expect(mockReadFile).toHaveBeenCalledWith(normalizePath(filePaths.dataUriCss));
     // Crucially, verify that no HTTP request was made (axios mock shouldn't be called)
     expect(mockAxiosGet).not.toHaveBeenCalled();
@@ -894,7 +888,6 @@ describe('extractAssets', () => {
     ];
     // Assert results
     expectAssetsToContain(result.assets, expectedAssets);
-    // *** CORRECTED EXPECTATION ***: Check that the correct files were read (with only one argument)
     expect(mockReadFile).toHaveBeenCalledWith(normalizePath(filePaths.complexUrlCss));
     // *** CORRECTED EXPECTATION ***: Verify the *fetch path* was used (with only one argument)
     expect(mockReadFile).toHaveBeenCalledWith(expectedBgFetchPath);

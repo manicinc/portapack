@@ -8,7 +8,6 @@
  * and data URIs are ignored. Duplicate asset URLs are ignored.
  */
 
-// FIX: Use only the named import for readFile
 import { readFile } from 'fs/promises';
 // NOTE: 'path' module was imported but not used, so removed. Add back if needed later.
 // import path from 'path';
