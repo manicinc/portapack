@@ -142,7 +142,7 @@ export async function minifyAssets(
   const minifiedAssets: Asset[] = await Promise.all(
     currentAssets.map(async (asset): Promise<Asset> => {
       // Make a shallow copy to avoid modifying the original asset object
-      let processedAsset = { ...asset };
+      const processedAsset = { ...asset };
 
       if (typeof processedAsset.content !== 'string' || processedAsset.content.length === 0) {
         return processedAsset; // Return the copy

@@ -338,46 +338,44 @@ describe('🧼 Minifier', () => {
     });
   });
 
-
   describe('Edge Cases', () => {
     it('💨 handles empty input object gracefully', async () => {
-        const emptyInput: ParsedHTML = { htmlContent: '', assets: [] };
-        const result = await minifyAssets(emptyInput, {}, mockLogger);
+      const emptyInput: ParsedHTML = { htmlContent: '', assets: [] };
+      const result = await minifyAssets(emptyInput, {}, mockLogger);
 
-        expect(result.htmlContent).toBe('');
-        expect(result.assets).toEqual([]);
-        expect(mockHtmlMinifierMinifyFn).not.toHaveBeenCalled();
-        expect(mockCleanCSSConstructorFn).not.toHaveBeenCalled(); // Check constructor
-        expect(mockTerserMinifyFn).not.toHaveBeenCalled();
-        // Check debug log for skipping due to no content
-        expect(mockLoggerDebugFn).toHaveBeenCalledWith('Minification skipped: No content.');
+      expect(result.htmlContent).toBe('');
+      expect(result.assets).toEqual([]);
+      expect(mockHtmlMinifierMinifyFn).not.toHaveBeenCalled();
+      expect(mockCleanCSSConstructorFn).not.toHaveBeenCalled(); // Check constructor
+      expect(mockTerserMinifyFn).not.toHaveBeenCalled();
+      // Check debug log for skipping due to no content
+      expect(mockLoggerDebugFn).toHaveBeenCalledWith('Minification skipped: No content.');
     });
 
     it('💨 handles input with assets but empty HTML content string', async () => {
-        const input: ParsedHTML = {
-            htmlContent: '',
-            assets: [ { type: 'css', url: 'style.css', content: sampleCssContent } ]
-        };
-        const result = await minifyAssets(input, {}, mockLogger);
+      const input: ParsedHTML = {
+        htmlContent: '',
+        assets: [{ type: 'css', url: 'style.css', content: sampleCssContent }],
+      };
+      const result = await minifyAssets(input, {}, mockLogger);
 
-        expect(result.htmlContent).toBe('');
-        expect(result.assets.find(a => a.type === 'css')?.content).toBe(minifiedCssContent);
-        expect(mockHtmlMinifierMinifyFn).not.toHaveBeenCalled();
-        expect(mockCleanCSSInstanceMinifyFn).toHaveBeenCalledTimes(1);
-        expect(mockTerserMinifyFn).not.toHaveBeenCalled();
+      expect(result.htmlContent).toBe('');
+      expect(result.assets.find(a => a.type === 'css')?.content).toBe(minifiedCssContent);
+      expect(mockHtmlMinifierMinifyFn).not.toHaveBeenCalled();
+      expect(mockCleanCSSInstanceMinifyFn).toHaveBeenCalledTimes(1);
+      expect(mockTerserMinifyFn).not.toHaveBeenCalled();
     });
 
     it('💨 handles input with HTML but empty assets array', async () => {
-        const input: ParsedHTML = { htmlContent: sampleHtmlContent, assets: [] };
-        const result = await minifyAssets(input, {}, mockLogger);
+      const input: ParsedHTML = { htmlContent: sampleHtmlContent, assets: [] };
+      const result = await minifyAssets(input, {}, mockLogger);
 
-        expect(result.htmlContent).toBe(minifiedHtmlContent);
-        expect(result.assets).toEqual([]);
-        expect(mockHtmlMinifierMinifyFn).toHaveBeenCalledTimes(1);
-        expect(mockCleanCSSInstanceMinifyFn).not.toHaveBeenCalled();
-        expect(mockTerserMinifyFn).not.toHaveBeenCalled();
+      expect(result.htmlContent).toBe(minifiedHtmlContent);
+      expect(result.assets).toEqual([]);
+      expect(mockHtmlMinifierMinifyFn).toHaveBeenCalledTimes(1);
+      expect(mockCleanCSSInstanceMinifyFn).not.toHaveBeenCalled();
+      expect(mockTerserMinifyFn).not.toHaveBeenCalled();
     });
-
 
     it('⚠️ handles CleanCSS returning no styles without errors', async () => {
       // Use mockReturnValueOnce for the instance method mock

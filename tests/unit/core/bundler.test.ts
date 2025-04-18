@@ -363,7 +363,7 @@ describe('🧩 Core Bundler', () => {
       ).toThrow(/No valid page entries/);
       expect(mockLoggerErrorSpy).toHaveBeenCalled();
     });
-    
+
     it('should log warning and skip invalid entries', () => {
       // Define the 'pages' array explicitly for this test
       const pages: any[] = [

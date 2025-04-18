@@ -31,7 +31,9 @@ export function buildDocsSidebar(): SidebarItem[] {
 
     // Get all markdown files from the API docs directory using absolute path
     // Use path.join for cross-platform compatibility
-    const apiFiles = glob.sync(path.join(apiDir, '**/*.md').replace(/\\/g, '/'), { absolute: true }); // Use forward slashes for glob
+    const apiFiles = glob.sync(path.join(apiDir, '**/*.md').replace(/\\/g, '/'), {
+      absolute: true,
+    }); // Use forward slashes for glob
 
     // Log found files for debugging
     console.log(`Found ${apiFiles.length} API files:`, apiFiles);
@@ -58,7 +60,9 @@ export function buildDocsSidebar(): SidebarItem[] {
           // Check if the file is within the current section's directory
           // and is not an index file directly within that section directory
           const fileDirPath = path.dirname(file);
-          return file.startsWith(sectionDir) && fileDirPath !== sectionDir && !file.endsWith('index.md');
+          return (
+            file.startsWith(sectionDir) && fileDirPath !== sectionDir && !file.endsWith('index.md')
+          );
           // Alternative, simpler check if structure is flat within sections:
           // return file.startsWith(path.join(apiDir, sectionPath, '/')) && !file.endsWith('index.md');
         })
@@ -92,15 +96,16 @@ export function buildDocsSidebar(): SidebarItem[] {
     const mainApiIndexExists = apiFiles.some(file => file === mainApiIndex);
 
     if (mainApiIndexExists) {
-       apiSidebar.unshift({
-          text: 'API Overview', // Or 'API Reference'
-          link: '/api/', // Link to the root index file of the API section
-       });
+      apiSidebar.unshift({
+        text: 'API Overview', // Or 'API Reference'
+        link: '/api/', // Link to the root index file of the API section
+      });
     } else {
-       // Maybe add a placeholder or log a warning if the main index is missing
-       console.warn("Main API index file (e.g., docs/api/index.md or docs/api/README.md) not found.");
+      // Maybe add a placeholder or log a warning if the main index is missing
+      console.warn(
+        'Main API index file (e.g., docs/api/index.md or docs/api/README.md) not found.'
+      );
     }
-
 
     // Log the final generated sidebar
     console.log('Generated API Sidebar:', JSON.stringify(apiSidebar, null, 2));

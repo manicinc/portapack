@@ -1,9 +1,71 @@
 {
-  "singleQuote": true,
-  "semi": true,
-  "tabWidth": 2,
-  "printWidth": 100,
-  "trailingComma": "es5",
-  "arrowParens": "avoid",
-  "endOfLine": "lf"
+  // Specifies this is the root config; ESLint won't look higher up.
+  "root": true,
+
+  // Specifies the parser ESLint should use. Needed for TypeScript.
+  "parser": "@typescript-eslint/parser",
+
+  // Configures parser options.
+  "parserOptions": {
+    "ecmaVersion": "latest", // Use the latest ECMAScript features
+    "sourceType": "module" // Use ES modules, matching your package.json "type": "module"
+    // "project": "./tsconfig.json" // Uncomment this line if you want to enable rules that require type information.
+                                  // This can provide more powerful linting but might slow down linting.
+                                  // Ensure your tsconfig.json is correctly set up if you enable this.
+  },
+
+  // Defines the global environments available.
+  "env": {
+    "node": true, // Enable Node.js global variables and Node.js scoping.
+    "es2022": true, // Enable ES2022 globals (aligns with ecmaVersion: 'latest').
+    "jest/globals": true // Enable Jest global variables (like describe, it, expect). Requires eslint-plugin-jest.
+  },
+
+  // Specifies plugins to use.
+  "plugins": [
+    "@typescript-eslint", // Plugin for TypeScript-specific linting rules.
+    "jest" // Plugin for Jest-specific linting rules.
+  ],
+
+  // Extends base configurations. Rules are inherited and potentially overridden.
+  "extends": [
+    // Base recommended ESLint rules.
+    "eslint:recommended",
+
+    // Recommended rules from the @typescript-eslint plugin.
+    "plugin:@typescript-eslint/recommended",
+
+    // Recommended rules from the eslint-plugin-jest.
+    "plugin:jest/recommended",
+
+    // IMPORTANT: This MUST be the LAST configuration in the extends array.
+    // It uses 'eslint-config-prettier' to disable ESLint rules that would conflict with Prettier formatting.
+    // This lets Prettier handle all formatting concerns without fighting ESLint.
+    "prettier"
+  ],
+
+  // Custom rules or overrides for rules from extended configs.
+  "rules": {
+    // --- Add specific rule overrides here if needed ---
+    // Example: Warn about unused variables, but allow if prefixed with _
+    // "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+
+    // Example: Warn instead of error for console logs
+    // "no-console": "warn",
+
+    // You can turn off specific rules if they are too noisy or don't fit your style:
+    // "@typescript-eslint/no-explicit-any": "off",
+
+    // Add any other custom rules or overrides here.
+  },
+
+  // Specifies files and directories that ESLint should ignore.
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/", // Your build output directory
+    "coverage/", // Your test coverage directory
+    "docs/.vitepress/dist/", // Your VitePress build output
+    "*.cjs" // Often auto-generated CommonJS wrappers might not need linting
+    // Add any other patterns for generated files or directories
+  ]
 }

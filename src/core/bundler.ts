@@ -248,7 +248,7 @@ export function bundleMultiPageHTML(pages: PageEntry[], logger?: Logger): string
   // (Ensure template IDs use `page-${slug}`)
   // (Ensure nav links use `href="#${slug}"` and `data-page="${slug}"`)
   // (Ensure router script uses `${defaultPageSlug}` correctly)
-  let output = `
+  const output = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
