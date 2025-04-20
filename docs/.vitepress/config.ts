@@ -52,7 +52,7 @@ export default defineConfig({
         ],
       },
       { text: 'Contributing', link: '/contributing' },
-      { text: 'Archiecture', link: '/architecture'},
+      { text: 'Architecture', link: '/architecture'},
       { text: 'Roadmap', link: 'roadmap'}
     ],
 
