@@ -96,8 +96,7 @@ You can access individual building blocks too:
 import {
   generatePortableHTML,
   generateRecursivePortableHTML,
-  bundleMultiPageHTML,
-  fetchAndPackWebPage,
+  bundleMultiPageHTML
 } from 'portapack';
 ```
 
@@ -105,7 +104,6 @@ import {
 | --------------------------------- | ------------------------------------- |
 | `generatePortableHTML()`          | Bundle a single file or URL           |
 | `generateRecursivePortableHTML()` | Crawl & bundle entire site            |
-| `fetchAndPackWebPage()`           | Just fetch HTML (no asset processing) |
 | `bundleMultiPageHTML()`           | Combine multiple HTMLs with router    |
 
 ## 📊 Project Health
