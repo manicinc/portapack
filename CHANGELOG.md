@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/manicinc/portapack/compare/v0.3.2...v0.3.3) (2025-04-20)
+
+
+### Bug Fixes
+
+* typo in link ([e79e1d1](https://github.com/manicinc/portapack/commit/e79e1d105f800550d067d62ec04d0af6888eb82d))
+
 ## [0.3.2](https://github.com/manicinc/portapack/compare/v0.3.1...v0.3.2) (2025-04-18)
 
 
