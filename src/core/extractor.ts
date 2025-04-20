@@ -288,7 +288,6 @@ async function fetchAsset(
       logger?.debug(
         `Workspaceed remote asset ${resolvedUrl.href} (Status: ${response.status}, Type: ${response.headers['content-type'] || 'N/A'}, Size: ${response.data?.byteLength ?? 0} bytes)`
       );
-      // console.log(`[DEBUG fetchAsset] HTTP fetch SUCCESS for: ${resolvedUrl.href}, Status: ${response.status}`); // Keep debug log commented unless needed
       // Return the fetched data as a Node.js Buffer
       return Buffer.from(response.data);
     }
@@ -300,7 +299,6 @@ async function fetchAsset(
         // IMPORTANT: This strips query params and fragments from the URL
         filePath = fileURLToPath(resolvedUrl);
       } catch (e: any) {
-        // console.error(`[DEBUG fetchAsset] fileURLToPath FAILED for: ${resolvedUrl.href}`, e); // Keep debug log commented unless needed
         logger?.error(
           `Could not convert file URL to path: ${resolvedUrl.href}. Error: ${e.message}`
         );
@@ -308,12 +306,9 @@ async function fetchAsset(
       }
 
       const normalizedForLog = path.normalize(filePath);
-      // console.log(`[DEBUG fetchAsset] Attempting readFile with path: "${normalizedForLog}" (Original from URL: "${filePath}")`); // Keep debug log commented unless needed
 
       // Read file content using fs/promises
       const data = await readFile(filePath); // This call uses the mock in tests
-
-      // console.log(`[DEBUG fetchAsset] readFile call SUCCEEDED for path: "${normalizedForLog}". Data length: ${data?.byteLength}`); // Keep debug log commented unless needed
       logger?.debug(`Read local file ${filePath} (${data.byteLength} bytes)`);
       // Return the file content as a Buffer
       return data;

@@ -7,7 +7,6 @@
  *   - CommonJS format (`cjs`) for CLI compatibility with Node/npx
  *   - .cjs file extension to avoid ESM interpretation issues
  *   - Shebang (`#!/usr/bin/env node`) for executability
- *   - No type declarations
  *
  * 🔹 API Build:
  *   - ESModule format (`esm`) for modern module usage
