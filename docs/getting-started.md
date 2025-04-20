@@ -77,8 +77,7 @@ For more specific use cases, you can access individual components:
 import {
   generatePortableHTML,
   generateRecursivePortableHTML,
-  bundleMultiPageHTML,
-  fetchAndPackWebPage,
+  bundleMultiPageHTML
 } from 'portapack';
 
 // Bundle a single HTML file or URL
