@@ -13,7 +13,6 @@ import {
   generatePortableHTML,
   bundleMultiPageHTML,
   generateRecursivePortableHTML,
-  fetchAndPackWebPage,
 } from '../src/index'; // 🔧 use '../src/index' for dev, '../dist/index' for built
 
 const TEMP_DIR = path.join(os.tmpdir(), 'portapack-example');
@@ -67,17 +66,6 @@ async function timedBundle(name: string, task: () => Promise<{ html: string; met
     })
   );
 
-  // 🔹 Fetch and display raw HTML from remote site (no metadata)
-  console.log(chalk.cyan('\n⏳ Fetch and Pack Web Page (raw)'));
-  try {
-    const { html, metadata } = await fetchAndPackWebPage('https://getbootstrap.com');
-    const filePath = await writeTempFile('fetched-page.html', html);
-    console.log(chalk.green('✅ Saved fetched HTML:'), `file://${filePath}`);
-    console.log(`📦 Size: ${(metadata.outputSize / 1024).toFixed(2)} KB`);
-  } catch (err) {
-    console.error(chalk.red('❌ Failed to fetch web page:'), err);
-  }
-
   // 🔹 Multi-page manual bundle
   await timedBundle('Multi-Page Site Bundling', async () => {
     const pages = [
@@ -100,16 +88,6 @@ async function timedBundle(name: string, task: () => Promise<{ html: string; met
   await timedBundle('Recursive Site Bundling', () =>
     generateRecursivePortableHTML('https://getbootstrap.com', 2)
   );
-
-  // 🔹 Broken page test
-  console.log(chalk.cyan('\n⏳ Broken Page Test'));
-  try {
-    const { html, metadata } = await fetchAndPackWebPage('https://example.com/404');
-    const brokenOut = await writeTempFile('broken-page.html', html);
-    console.log(chalk.yellow('⚠️ Page returned something, saved to:'), `file://${brokenOut}`);
-  } catch {
-    console.log(chalk.red('🚫 Could not fetch broken page as expected.'));
-  }
 
   console.log(chalk.gray(`\n📁 Output directory: ${TEMP_DIR}\n`));
 })();

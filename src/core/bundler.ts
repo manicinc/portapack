@@ -215,8 +215,6 @@ export function bundleMultiPageHTML(pages: PageEntry[], logger?: Logger): string
         `Could not determine a valid base slug for "${page.url}", using generated fallback "${baseSlug}".`
       );
     }
-    // --- END REVISED SLUG LOGIC ---
-
     // --- Collision Handling ---
     let slug = baseSlug;
     let collisionCounter = 1;

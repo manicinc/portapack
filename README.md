@@ -19,6 +19,8 @@ _Minimal input. Maximal output._
 - [⚙️ CLI Reference](https://manicinc.github.io/portapack/cli)
 - [🛠 Configuration Guide](https://manicinc.github.io/portapack/configuration)
 - [💻 API Reference](https://manicinc.github.io/portapack/api/)
+- [🏛️ Architecture](https://manicinc.github.io/portapack/architecture/)
+- [🚧 Roadmap](https://manicinc.github.io/portapack/roadmap/)
 - [🤝 Contributing Guidelines](https://manicinc.github.io/portapack/contributing)
 
 ## 🚀 Quick Start
@@ -32,26 +34,6 @@ npm install -g portapack
 # OR use npx (no install needed)
 npx portapack ./index.html -o bundle.html
 ```
-
-### 🧰 CLI Options
-
-```bash
-portapack [input] [options]
-```
-
-| Option                 | Description                             |
-| ---------------------- | --------------------------------------- |
-| `-o, --output <file>`  | Output file path                        |
-| `-r, --recursive [n]`  | Crawl site up to n levels deep          |
-| `--max-depth <n>`      | Explicit crawl depth                    |
-| `-m, --minify`         | Enable all minification                 |
-| `--no-minify-*`        | Disable html, css, or js minify         |
-| `-e, --embed-assets`   | Inline all assets (default: true)       |
-| `--no-embed-assets`    | Leave links as-is                       |
-| `-b, --base-url <url>` | Override base URL resolution            |
-| `-v, --verbose`        | Show debug output                       |
-| `--log-level <lvl>`    | Set log level: debug, info, warn, error |
-| `-d, --dry-run`        | Run without writing file                |
 
 ### 📋 CLI Examples
 
@@ -93,6 +75,7 @@ console.log(result.html); // bundled HTML
 
 ```typescript
 import { pack, LogLevel } from 'portapack';
+import fs from 'fs';
 
 const result = await pack('https://example.com', {
   minifyCss: true,
@@ -101,14 +84,9 @@ const result = await pack('https://example.com', {
   output: 'site.html',
   logLevel: LogLevel.INFO,
 });
-```
 
-### Save to Disk
-
-```typescript
-import fs from 'fs';
+// Save to disk
 fs.writeFileSync('output.html', result.html);
-```
 
 ### Advanced API Usage
 
@@ -129,16 +107,6 @@ import {
 | `generateRecursivePortableHTML()` | Crawl & bundle entire site            |
 | `fetchAndPackWebPage()`           | Just fetch HTML (no asset processing) |
 | `bundleMultiPageHTML()`           | Combine multiple HTMLs with router    |
-
-## 🤝 Contribute
-
-```bash
-# Get started
-git clone https://github.com/manicinc/portapack
-cd portapack
-npm install
-npm run dev
-```
 
 ## 📊 Project Health
 
