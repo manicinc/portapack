@@ -26,3 +26,9 @@ docs/api/
 
 
 docs/.vitepress/cache/
+
+desktop/frontend/wailsjs/
+
+build/
+package.json.md5
+llm_context.txt
