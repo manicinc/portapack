@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/manicinc/portapack/compare/v0.3.3...v0.4.0) (2025-06-07)
+
+
+### Features
+
+* add initial Vue 3 frontend with Wails integration and project structure ([0a4edd8](https://github.com/manicinc/portapack/commit/0a4edd8b7c14a15acaaf8554536fa1792eec8049))
+
 ## [0.3.3](https://github.com/manicinc/portapack/compare/v0.3.2...v0.3.3) (2025-04-20)
 
 
