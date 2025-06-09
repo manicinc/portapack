@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/manicinc/portapack/compare/v0.4.0...v0.5.0) (2025-06-09)
+
+
+### Features
+
+* add Google Analytics integration to documentation site ([6d96b54](https://github.com/manicinc/portapack/commit/6d96b540ca12adc63eb4c7cf0f04d72d18453b41))
+
 # [0.4.0](https://github.com/manicinc/portapack/compare/v0.3.3...v0.4.0) (2025-06-07)
 
 
