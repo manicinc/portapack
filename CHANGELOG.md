@@ -1,3 +1,10 @@
+## [0.4.1](https://github.com/manicinc/portapack/compare/v0.4.0...v0.4.1) (2025-06-10)
+
+
+### Bug Fixes
+
+* update base path in VitePress config for correct deployment ([2b41ea1](https://github.com/manicinc/portapack/commit/2b41ea1edae6d2185f34b1b595f6741e58ccd080))
+
 # [0.4.0](https://github.com/manicinc/portapack/compare/v0.3.3...v0.4.0) (2025-06-07)
 
 
