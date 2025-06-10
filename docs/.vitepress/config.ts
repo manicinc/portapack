@@ -3,6 +3,8 @@ import { buildDocsSidebar } from './sidebar-generator';
 
 const GA_ID = process.env.GA_ID;
 
+console.log(`Using Google Analytics ID: ${GA_ID || 'Not set'}`);
+
 const gaHead: HeadConfig[] = GA_ID
   ? [
       [
