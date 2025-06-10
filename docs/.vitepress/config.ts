@@ -23,7 +23,7 @@ const gaHead: HeadConfig[] = GA_ID
   : [];
 
 export default defineConfig({
-  base: '/portapack/',
+  base: '/',
   title: 'PortaPack',
   description: 'Bundle & Minify HTML into a Single Portable File',
   appearance: 'dark',
