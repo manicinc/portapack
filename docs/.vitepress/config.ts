@@ -1,7 +1,7 @@
 import { defineConfig, HeadConfig } from 'vitepress';
 import { buildDocsSidebar } from './sidebar-generator';
 
-const GA_ID = process.env.GA_ID;
+const GA_ID = process.env.VITE_GA_ID;
 
 console.log(`Using Google Analytics ID: ${GA_ID || 'Not set'}`);
 
