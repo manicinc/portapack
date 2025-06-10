@@ -1,3 +1,10 @@
+## [0.4.2](https://github.com/manicinc/portapack/compare/v0.4.1...v0.4.2) (2025-06-10)
+
+
+### Bug Fixes
+
+* update Google Analytics ID environment variable for consistency ([6dbeb00](https://github.com/manicinc/portapack/commit/6dbeb001f72d77d3cdc10a9d0681746c11284e45))
+
 ## [0.4.1](https://github.com/manicinc/portapack/compare/v0.4.0...v0.4.1) (2025-06-10)
 
 
