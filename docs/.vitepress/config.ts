@@ -32,13 +32,13 @@ export default defineConfig({
   lastUpdated: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/portapack/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'og:title', content: 'PortaPack' }],
     ['meta', {
       name: 'og:description',
       content: 'Bundle & Minify HTML into a Single Portable File'
     }],
-    ['meta', { name: 'og:image', content: '/portapack/portapack.jpg' }],
+    ['meta', { name: 'og:image', content: '/portapack.jpg' }],
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ...gaHead
   ],
