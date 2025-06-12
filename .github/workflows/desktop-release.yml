@@ -9,12 +9,23 @@ jobs:
   release:
     if: startsWith(github.event.head_commit.message, 'desktop:')
     name: Build and Release
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        goos: [linux, windows, darwin]
-        goarch: [amd64]
+        include:
+          - goos: linux
+            goarch: amd64
+            runner: ubuntu-latest
+          - goos: windows
+            goarch: amd64
+            runner: ubuntu-latest
+          - goos: darwin
+            goarch: amd64
+            runner: macos-latest
+
+    runs-on: ${{ matrix.runner }}
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -31,36 +42,49 @@ jobs:
       - name: Add Go bin to PATH
         run: echo "${HOME}/go/bin" >> $GITHUB_PATH
 
-      - name: Build for ${{ matrix.goos }}-${{ matrix.goarch }}
+      - name: Extract Version Tag
+        id: get_version
+        run: |
+          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          VERSION=$(echo "$COMMIT_MSG" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' || true)
+
+          if [ -z "$VERSION" ]; then
+            echo "❌ No version tag (e.g. v1.2.3) found in commit message."
+            exit 1
+          fi
+
+          echo "✅ Version found: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build Wails app for ${{ matrix.goos }}-${{ matrix.goarch }}
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
           cd desktop
-          mkdir -p ../build/${{ matrix.goos }}_${{ matrix.goarch }}
-          wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }} -o ../build/${{ matrix.goos }}_${{ matrix.goarch }}/app
+          wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }}
 
-      - name: Archive builds
+          APP_NAME=$(basename "$(pwd)")
+          OUTPUT_PATH="build/bin/${{ matrix.goos }}/${{ matrix.goarch }}/$APP_NAME"
+
+          mkdir -p ../build/${{ matrix.goos }}_${{ matrix.goarch }}
+          cp "$OUTPUT_PATH" ../build/${{ matrix.goos }}_${{ matrix.goarch }}/
+
+      - name: Archive Build
         run: |
           cd build/${{ matrix.goos }}_${{ matrix.goarch }}
           zip -r ../../app-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
           cd ../..
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release (only once)
+        if: matrix.goos == 'linux'
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          name: Release from desktop commit
-          tag_name: ${{ github.sha }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          tag_name: ${{ steps.get_version.outputs.version }}
 
-      - name: Upload Release Assets
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            app-linux-amd64.zip
-            app-windows-amd64.zip
-            app-darwin-amd64.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: app-${{ matrix.goos }}-${{ matrix.goarch }}.zip
