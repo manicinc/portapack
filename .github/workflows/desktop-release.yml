@@ -47,7 +47,7 @@ jobs:
         if: matrix.goos == 'linux'
         run: |
           sudo apt update
-          sudo apt install -y libgtk-3-dev libwebkit2gtk-4.0-dev libglib2.0-dev libappindicator3-dev libnotify-dev
+          sudo apt install -y libgtk-3-dev libwebkit2gtk-4.1-dev libglib2.0-dev libappindicator3-dev libnotify-dev
 
       - name: Extract Version Tag
         id: get_version
@@ -69,7 +69,11 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           cd desktop
-          wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }}
+          if [ "${{ matrix.goos }}" = "linux" ]; then
+            wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }} -tags webkit2_41
+          else
+            wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }}
+          fi
 
           APP_NAME=$(basename "$(pwd)")
           OUTPUT_PATH="build/bin/${{ matrix.goos }}/${{ matrix.goarch }}/$APP_NAME"
