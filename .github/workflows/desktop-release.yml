@@ -88,3 +88,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: app-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+
