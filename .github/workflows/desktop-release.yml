@@ -39,8 +39,15 @@ jobs:
       - name: Install Wails CLI
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      - name: Add Go bin to PATH
+      - name: Add Go bin to PATH (Unix)
+        if: matrix.goos != 'windows'
+        shell: bash
         run: echo "${HOME}/go/bin" >> $GITHUB_PATH
+
+      - name: Add Go bin to PATH (Windows)
+        if: matrix.goos == 'windows'
+        shell: bash
+        run: echo "${USERPROFILE}/go/bin" >> $GITHUB_PATH
 
       # Install Linux dependencies for Wails
       - name: Install Linux Dependencies
@@ -51,12 +58,20 @@ jobs:
 
       - name: Extract Version Tag
         id: get_version
+        shell: bash
         run: |
           COMMIT_MSG="${{ github.event.head_commit.message }}"
-          VERSION=$(echo "$COMMIT_MSG" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' || true)
-
+          echo "🔍 Full commit message: '$COMMIT_MSG'"
+          
+          # More robust version extraction with debugging
+          VERSION=$(echo "$COMMIT_MSG" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          
+          echo "🔍 Extracted version: '$VERSION'"
+          
           if [ -z "$VERSION" ]; then
             echo "❌ No version tag (e.g. v1.2.3) found in commit message."
+            echo "📝 Commit message was: $COMMIT_MSG"
+            echo "📋 Expected format: 'desktop: v1.2.3 - description'"
             exit 1
           fi
 
@@ -69,6 +84,7 @@ jobs:
           echo "desktop_tag=$DESKTOP_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build Wails app for ${{ matrix.goos }}-${{ matrix.goarch }}
+        shell: bash
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
@@ -95,6 +111,7 @@ jobs:
           fi
 
       - name: Archive Build
+        shell: bash
         run: |
           cd build/${{ matrix.goos }}_${{ matrix.goarch }}
           zip -r ../../portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
