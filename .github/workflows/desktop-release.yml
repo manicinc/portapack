@@ -75,7 +75,7 @@ jobs:
             wails build -platform ${{ matrix.goos }}/${{ matrix.goarch }}
           fi
 
-          APP_NAME=$(basename "$(pwd)")
+          APP_NAME="portapack"
           mkdir -p ../build/${{ matrix.goos }}_${{ matrix.goarch }}
 
           if [ "${{ matrix.goos }}" = "darwin" ]; then
