@@ -19,6 +19,13 @@
 
 * update application name in desktop release workflow ([47dc96e](https://github.com/manicinc/portapack/commit/47dc96e4a1d92541f498c084af930a41bc2628ef))
 
+## [0.4.2](https://github.com/manicinc/portapack/compare/v0.4.1...v0.4.2) (2025-06-15)
+
+
+### Bug Fixes
+
+* update application name in desktop release workflow ([47dc96e](https://github.com/manicinc/portapack/commit/47dc96e4a1d92541f498c084af930a41bc2628ef))
+
 ## [0.4.1](https://github.com/manicinc/portapack/compare/v0.4.0...v0.4.1) (2025-06-10)
 
 
