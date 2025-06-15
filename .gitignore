@@ -32,3 +32,5 @@ desktop/frontend/wailsjs/
 build/
 package.json.md5
 llm_context.txt
+cache
+docs/.vitepress/config.ts.timestamp-1749746188837-d5fd8665bcdf7.mjs
