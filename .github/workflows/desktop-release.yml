@@ -60,8 +60,13 @@ jobs:
             exit 1
           fi
 
+          # Use desktop-specific tag to avoid conflicts with CLI releases
+          DESKTOP_TAG="desktop-$VERSION"
+          
           echo "✅ Version found: $VERSION"
+          echo "✅ Desktop tag: $DESKTOP_TAG"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "desktop_tag=$DESKTOP_TAG" >> "$GITHUB_OUTPUT"
 
       - name: Build Wails app for ${{ matrix.goos }}-${{ matrix.goarch }}
         env:
@@ -92,7 +97,7 @@ jobs:
       - name: Archive Build
         run: |
           cd build/${{ matrix.goos }}_${{ matrix.goarch }}
-          zip -r ../../app-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
+          zip -r ../../portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
           cd ../..
 
       - name: Create GitHub Release (only once)
@@ -100,10 +105,27 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ steps.get_version.outputs.version }}
-          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Desktop GUI Release ${{ steps.get_version.outputs.version }}
+          tag_name: ${{ steps.get_version.outputs.desktop_tag }}
+          body: |
+            🖥️ **Desktop GUI Release ${{ steps.get_version.outputs.version }}**
+            
+            This release contains the desktop GUI application for PortaPack.
+            
+            ## Downloads
+            - **Windows**: `portapack-desktop-${{ steps.get_version.outputs.version }}-windows-amd64.zip`
+            - **macOS**: `portapack-desktop-${{ steps.get_version.outputs.version }}-darwin-amd64.zip`  
+            - **Linux**: `portapack-desktop-${{ steps.get_version.outputs.version }}-linux-amd64.zip`
+            
+            ## Installation
+            1. Download the appropriate file for your operating system
+            2. Extract the archive
+            3. Run the executable
+          draft: false
+          prerelease: false
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: app-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+          tag_name: ${{ steps.get_version.outputs.desktop_tag }}
+          files: portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip
