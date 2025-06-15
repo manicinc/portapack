@@ -113,9 +113,13 @@ jobs:
       - name: Archive Build
         shell: bash
         run: |
-          cd build/${{ matrix.goos }}_${{ matrix.goarch }}
-          zip -r ../../portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
-          cd ../..
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            powershell -Command "Compress-Archive -Path 'build/${{ matrix.goos }}_${{ matrix.goarch }}/*' -DestinationPath 'portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip'"
+          else
+            cd build/${{ matrix.goos }}_${{ matrix.goarch }}
+            zip -r ../../portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
+            cd ../..
+          fi
 
       - name: Create GitHub Release (only once)
         if: matrix.goos == 'linux'
