@@ -104,10 +104,10 @@ jobs:
             cp -r "build/bin/$APP_NAME.app" "../build/${{ matrix.goos }}_${{ matrix.goarch }}/"
           elif [ "${{ matrix.goos }}" = "windows" ]; then
             # Windows builds create .exe files
-            cp "build/bin/${{ matrix.goos }}/${{ matrix.goarch }}/$APP_NAME.exe" "../build/${{ matrix.goos }}_${{ matrix.goarch }}/"
+            cp "build/bin/$APP_NAME.exe" "../build/${{ matrix.goos }}_${{ matrix.goarch }}/"
           else
             # Linux builds create regular executables
-            cp "build/bin/${{ matrix.goos }}/${{ matrix.goarch }}/$APP_NAME" "../build/${{ matrix.goos }}_${{ matrix.goarch }}/"
+            cp "build/bin/$APP_NAME" "../build/${{ matrix.goos }}_${{ matrix.goarch }}/"
           fi
 
       - name: Archive Build
