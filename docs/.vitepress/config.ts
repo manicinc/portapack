@@ -72,7 +72,6 @@ export default defineConfig({
           { text: 'CLI Reference', link: '/cli' },
           { text: 'API', link: '/api/README' },
           { text: 'Configuration', link: '/configuration' },
-          { text: 'Advanced Usage', link: '/advanced' }
         ]
       },
       { text: 'Contributing', link: '/contributing' },
