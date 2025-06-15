@@ -111,10 +111,11 @@ jobs:
           fi
 
       - name: Archive Build
+        working-directory: ${{ github.workspace }} # <-- ADD THIS LINE
         shell: bash
         run: |
           if [ "${{ matrix.goos }}" = "windows" ]; then
-            powershell -Command "Compress-Archive -Path 'build/${{ matrix.goos }}_${{ matrix.goarch }}/*' -DestinationPath 'portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip'"
+            powershell -Command "Compress-Archive -Path './build/${{ matrix.goos }}_${{ matrix.goarch }}/*' -DestinationPath './portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip'"
           else
             cd build/${{ matrix.goos }}_${{ matrix.goarch }}
             zip -r ../../portapack-desktop-${{ steps.get_version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}.zip .
