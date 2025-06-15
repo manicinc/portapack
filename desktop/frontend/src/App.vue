@@ -9,7 +9,6 @@
         </div>
         <div class="title-section">
           <h1 class="glitch-title" :data-text="glitchText">{{ glitchText }}</h1>
-          <div class="subtitle">ASSET BUNDLING TERMINAL v2.1.47</div>
         </div>
         <div class="controls-section">
           <button @click="toggleTheme" class="theme-switch">
