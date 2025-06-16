@@ -1,11 +1,28 @@
 # 🚀 Getting Started with PortaPack
 
-## Prerequisites
+## Choose Your Installation Method
 
+PortaPack offers multiple ways to get started - choose what works best for you:
+
+### 🖥️ Desktop Application (Recommended for Beginners)
+
+The easiest way to use PortaPack is with our desktop application:
+
+- **No Node.js required** - Standalone executable
+- **User-friendly GUI** - Drag & drop interface
+- **Cross-platform** - Works on macOS, Windows, and Linux
+
+[**📦 Download Desktop App**](/releases) - Get the latest release for your platform
+
+### ⚡ Command Line Interface (For Developers)
+
+For advanced users and automation:
+
+**Prerequisites:**
 - Node.js (v16.0.0+)
 - npm (v8.0.0+)
 
-## Quick Installation
+**Quick Installation:**
 
 ```bash
 # Global installation
@@ -16,6 +33,16 @@ npm install --save-dev portapack
 ```
 
 ## Basic Usage
+
+### Desktop App Usage
+
+1. Download and install the desktop app from our [releases page](/releases)
+2. Launch PortaPack
+3. Either:
+   - **Drag & drop** an HTML file into the application
+   - **Enter a URL** to bundle a website
+   - **Configure options** like minification and recursion depth
+4. Click "Bundle" and save your portable HTML file
 
 ### CLI Quickstart
 
@@ -114,6 +141,7 @@ For details, see the [CLI Reference](https://manicinc.github.io/portapack/cli).
 
 ## Next Steps
 
+- 📦 [Download Desktop App](/releases) (if you haven't already)
 - 📖 [Explore CLI Options](https://manicinc.github.io/portapack/cli)
 - 🛠 [Advanced Configuration](https://manicinc.github.io/portapack/configuration)
 - 💻 [API Reference](https://manicinc.github.io/portapack/api/README.html)

@@ -66,6 +66,7 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/getting-started' },
+      { text: 'Download', link: '/releases' }, // ADD THIS LINE
       {
         text: 'Docs',
         items: [
@@ -91,6 +92,7 @@ export default defineConfig({
           ]
         }
       ],
+      
       '/cli/': [
         {
           text: 'CLI Guide',

@@ -14,6 +14,9 @@ hero:
       text: Get Started
       link: /getting-started
     - theme: alt
+      text: Download App
+      link: /releases
+    - theme: alt
       text: GitHub
       link: https://github.com/manicinc/portapack
 features:
