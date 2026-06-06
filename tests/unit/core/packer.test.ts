@@ -373,4 +373,59 @@ describe('📦 HTML Packer - packHTML()', () => {
     // expect(mockLoggerWarnFn).toHaveBeenCalledWith(expect.stringContaining(`Could not inline image via srcset: ${missingSrcsetUrl}. Content missing or not a data URI.`));
     expect(mockLoggerWarnFn).not.toHaveBeenCalled(); // Expect NO warnings in this specific path
   });
+
+  // --- Regression: assets keyed by resolved absolute URL must match relative refs in HTML ---
+  // The extractor stores assets under their resolved absolute URL, but the HTML still
+  // references them by their original (relative) attribute. Without base-URL-aware lookup
+  // (packHTML's `baseUrl` arg), nothing inlines for remote/relative pages. See web-fetcher fix.
+  describe('🔗 resolved-URL matching (relative refs + baseUrl)', () => {
+    const baseUrl = 'https://www.example.com/sub/page.html';
+    const html = `<html><head>
+        <link rel="stylesheet" href="css/site.css">
+        <style>.hero { background: url("../img/bg.png"); }</style>
+      </head><body>
+        <img src="img/logo.png">
+        <script src="js/app.js"></script>
+      </body></html>`;
+    // Assets keyed by their RESOLVED absolute URLs, as the extractor would produce.
+    const resolvedAssets: Asset[] = [
+      { type: 'css', url: 'https://www.example.com/sub/css/site.css', content: 'body{color:red}' },
+      { type: 'js', url: 'https://www.example.com/sub/js/app.js', content: 'console.log(1);' },
+      { type: 'image', url: 'https://www.example.com/sub/img/logo.png', content: imgDataUri },
+      { type: 'image', url: 'https://www.example.com/img/bg.png', content: imgDataUri2 },
+    ];
+
+    it('inlines CSS, JS, and images referenced by relative URLs when baseUrl is provided', () => {
+      const parsed: ParsedHTML = { htmlContent: html, assets: resolvedAssets };
+      const result = packHTML(parsed, mockLogger, baseUrl);
+      const $ = cheerio.load(result);
+
+      expect($('link[rel="stylesheet"]').length).toBe(0); // link replaced by <style>
+      expect($('style').first().text()).toContain('body{color:red}');
+      expect($('script[src]').length).toBe(0); // external script inlined
+      expect($('script:not([src])').html()).toContain('console.log(1);');
+      expect($('img').attr('src')).toBe(imgDataUri); // relative img inlined to data URI
+    });
+
+    it('rewrites url() inside inline <style> blocks against the document base URL', () => {
+      const parsed: ParsedHTML = { htmlContent: html, assets: resolvedAssets };
+      const result = packHTML(parsed, mockLogger, baseUrl);
+      const $ = cheerio.load(result);
+      // The inline style's ../img/bg.png resolves to /img/bg.png and becomes a data URI.
+      const styleWithBg = $('style')
+        .toArray()
+        .map(el => $(el).text())
+        .find(t => t.includes('.hero'));
+      expect(styleWithBg).toContain(`url("${imgDataUri2}")`);
+    });
+
+    it('does NOT inline relative refs when baseUrl is omitted (keys cannot be matched)', () => {
+      const parsed: ParsedHTML = { htmlContent: html, assets: resolvedAssets };
+      const result = packHTML(parsed, mockLogger); // no baseUrl
+      const $ = cheerio.load(result);
+      // Without a base, the relative href/src cannot resolve to the absolute keys.
+      expect($('link[rel="stylesheet"]').length).toBe(1);
+      expect($('img').attr('src')).toBe('img/logo.png');
+    });
+  });
 });

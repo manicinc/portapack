@@ -44,6 +44,21 @@ export async function parseHTML(entryFilePath: string, logger?: Logger): Promise
     throw new Error(`Could not read input HTML file: ${entryFilePath}`, { cause: err });
   }
 
+  return parseHTMLContent(htmlContent, logger);
+}
+
+/**
+ * Parses HTML from an in-memory string (e.g. content already fetched from a remote URL)
+ * using Cheerio, applying the exact same asset-discovery rules as {@link parseHTML}.
+ * This lets remote fetches reuse the parse → extract → pack pipeline without writing
+ * the fetched HTML to disk first.
+ *
+ * @function parseHTMLContent
+ * @param {string} htmlContent - The raw HTML markup to parse.
+ * @param {Logger} [logger] - Optional logger instance.
+ * @returns {ParsedHTML} The HTML content and a list of discovered asset URLs with inferred types.
+ */
+export function parseHTMLContent(htmlContent: string, logger?: Logger): ParsedHTML {
   const $: CheerioAPI = cheerio.load(htmlContent);
   const assets: Asset[] = [];
   const addedUrls = new Set<string>();

@@ -23,6 +23,7 @@ import { Logger } from '../../src/utils/logger';
 
 // --- Define PLAIN TOP-LEVEL mock functions ---
 const mockParseHTMLFn = jest.fn();
+const mockParseHTMLContentFn = jest.fn();
 const mockExtractAssetsFn = jest.fn();
 const mockMinifyAssetsFn = jest.fn();
 const mockPackHTMLFn = jest.fn();
@@ -44,7 +45,11 @@ jest.mock('../../src/utils/meta', () => ({
     setHtmlSize: mockSetHtmlSizeFn,
   })),
 }));
-jest.mock('../../src/core/parser', () => ({ __esModule: true, parseHTML: mockParseHTMLFn }));
+jest.mock('../../src/core/parser', () => ({
+  __esModule: true,
+  parseHTML: mockParseHTMLFn,
+  parseHTMLContent: mockParseHTMLContentFn,
+}));
 jest.mock('../../src/core/extractor', () => ({
   __esModule: true,
   extractAssets: mockExtractAssetsFn,
@@ -107,6 +112,7 @@ describe('📦 PortaPack Index (Public API)', () => {
     mockSetHtmlSizeFn.mockClear();
 
     (mockParseHTMLFn as any).mockImplementation(() => Promise.resolve(mockParsed));
+    (mockParseHTMLContentFn as any).mockReturnValue(mockParsed);
     (mockExtractAssetsFn as any).mockImplementation(() => Promise.resolve(mockParsed));
     (mockMinifyAssetsFn as any).mockImplementation(() => Promise.resolve(mockParsed));
     (mockPackHTMLFn as any).mockReturnValue(mockPacked);
@@ -219,7 +225,7 @@ describe('📦 PortaPack Index (Public API)', () => {
         { output: mockOutputPath },
         logger
       );
-      expect(mockPackHTMLFn).toHaveBeenCalledWith(mockParsed, logger);
+      expect(mockPackHTMLFn).toHaveBeenCalledWith(mockParsed, logger, mockHtmlPath);
       expect(mockFinishFn).toHaveBeenCalledWith(mockPacked, {
         assetCount: mockParsed.assets.length,
       });
@@ -227,11 +233,11 @@ describe('📦 PortaPack Index (Public API)', () => {
       expect(result.metadata).toEqual(expectedLocalMetadata);
     });
 
-    it('✅ should call fetchAndPackWebPage for remote input', async () => {
+    it('✅ should fetch then run the full inline pipeline for remote input', async () => {
       const remoteUrl = `${mockRemoteUrl}/page2`;
       expectedRemoteMetadata = { ...baseMetadata, input: remoteUrl };
       mockFinishFn.mockReturnValueOnce(expectedRemoteMetadata);
-      // Configure fetch mock to return specific metadata
+      // The fetcher only provides the rendered HTML; assets are inlined by the pipeline.
       const fetcherReturnMetadata = { ...baseMetadata, input: remoteUrl };
       (mockFetchAndPackWebPageFn as any).mockImplementationOnce(async () =>
         Promise.resolve({ html: mockPacked, metadata: fetcherReturnMetadata })
@@ -239,8 +245,15 @@ describe('📦 PortaPack Index (Public API)', () => {
 
       const result = await generatePortableHTML(remoteUrl, { output: mockOutputPath }, logger);
 
+      // Remote HTML must flow through fetch → parseContent → extract → minify → pack
       expect(mockFetchAndPackWebPageFn).toHaveBeenCalledWith(remoteUrl, logger);
-      expect(mockFinishFn).toHaveBeenCalledWith(mockPacked, fetcherReturnMetadata);
+      expect(mockParseHTMLContentFn).toHaveBeenCalledWith(mockPacked, logger);
+      expect(mockExtractAssetsFn).toHaveBeenCalledWith(mockParsed, true, remoteUrl, logger);
+      expect(mockMinifyAssetsFn).toHaveBeenCalledWith(mockParsed, { output: mockOutputPath }, logger);
+      expect(mockPackHTMLFn).toHaveBeenCalledWith(mockParsed, logger, remoteUrl);
+      expect(mockFinishFn).toHaveBeenCalledWith(mockPacked, {
+        assetCount: mockParsed.assets.length,
+      });
       expect(result.html).toBe(mockPacked);
       expect(result.metadata).toEqual(expectedRemoteMetadata);
     });

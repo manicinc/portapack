@@ -8,7 +8,7 @@ import {
   fetchAndPackWebPage as coreFetchAndPack,
   recursivelyBundleSite as coreRecursivelyBundleSite,
 } from './core/web-fetcher';
-import { parseHTML } from './core/parser';
+import { parseHTML, parseHTMLContent } from './core/parser';
 import { extractAssets } from './core/extractor';
 import { minifyAssets } from './core/minifier';
 import { packHTML } from './core/packer';
@@ -95,12 +95,23 @@ export async function generatePortableHTML(
   const timer = new BuildTimer(input);
 
   if (/^https?:\/\//i.test(input)) {
-    logger.info(`Workspaceing remote page: ${input}`); // Corrected typo "Workspaceing" -> "Fetching"
+    logger.info(`Fetching remote page: ${input}`);
     try {
-      const result = await coreFetchAndPack(input, logger);
-      const metadata = timer.finish(result.html, result.metadata);
+      const baseUrl = options.baseUrl || input;
+      // Fetch the fully rendered HTML, then run it through the SAME
+      // parse → extract → minify → pack pipeline used for local files so that
+      // CSS, JS, and images are actually discovered and inlined.
+      const fetched = await coreFetchAndPack(input, logger);
+      const parsed = parseHTMLContent(fetched.html, logger);
+      const enriched = await extractAssets(parsed, options.embedAssets ?? true, baseUrl, logger);
+      const minified = await minifyAssets(enriched, options, logger);
+      const finalHtml = packHTML(minified, logger, baseUrl);
+
+      const metadata = timer.finish(finalHtml, {
+        assetCount: minified.assets.length,
+      });
       logger.info(`Finished fetching and packing remote page: ${input}`);
-      return { html: result.html, metadata };
+      return { html: finalHtml, metadata };
     } catch (error: any) {
       logger.error(`Error fetching remote page ${input}: ${error.message}`);
       throw error;
@@ -114,7 +125,7 @@ export async function generatePortableHTML(
     const parsed = await parseHTML(input, logger);
     const enriched = await extractAssets(parsed, options.embedAssets ?? true, baseUrl, logger);
     const minified = await minifyAssets(enriched, options, logger);
-    const finalHtml = packHTML(minified, logger);
+    const finalHtml = packHTML(minified, logger, baseUrl);
 
     const metadata = timer.finish(finalHtml, {
       assetCount: minified.assets.length,

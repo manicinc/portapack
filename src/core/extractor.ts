@@ -13,6 +13,7 @@ import { fileURLToPath, URL } from 'url'; // Crucial for file path/URL conversio
 
 // === External Dependencies ===
 import * as axiosNs from 'axios'; // Using namespace import for clarity
+import * as cheerio from 'cheerio'; // For discovering assets inside inline <style> blocks
 import type {
   AxiosError,
   AxiosRequestConfig,
@@ -64,7 +65,7 @@ function isUtf8DecodingLossy(originalBuffer: Buffer, decodedString: string): boo
  * @param {Logger} [logger] - Optional logger instance.
  * @returns {string | undefined} The absolute base URL string ending in '/', or undefined if determination fails.
  */
-function determineBaseUrl(inputPathOrUrl: string, logger?: Logger): string | undefined {
+export function determineBaseUrl(inputPathOrUrl: string, logger?: Logger): string | undefined {
   // Log the input for debugging purposes
   // console.log(`[DEBUG determineBaseUrl] Input: "${inputPathOrUrl}"`); // Keep debug log commented unless needed
   logger?.debug(`Determining base URL for input: ${inputPathOrUrl}`);
@@ -167,7 +168,11 @@ function determineBaseUrl(inputPathOrUrl: string, logger?: Logger): string | und
  * @param {Logger} [logger] - Optional logger instance.
  * @returns {URL | null} A validated, absolute URL object, or null if invalid/ignorable.
  */
-function resolveAssetUrl(assetUrl: string, baseContextUrl?: string, logger?: Logger): URL | null {
+export function resolveAssetUrl(
+  assetUrl: string,
+  baseContextUrl?: string,
+  logger?: Logger
+): URL | null {
   // Trim whitespace from the URL
   const trimmedUrl = assetUrl?.trim();
 
@@ -523,6 +528,29 @@ export async function extractAssets(
       logger?.debug(` -> Queued initial asset: ${urlToQueue} (Original raw: ${asset.url})`);
     } else {
       logger?.debug(` -> Skipping already processed/queued initial asset: ${urlToQueue}`);
+    }
+  }
+
+  // --- Discover assets referenced inside inline <style> blocks ---
+  // The parser intentionally ignores inline <style> contents, so url()/@import targets
+  // there (e.g. background images, @font-face fonts) would otherwise never be fetched.
+  // Resolve them against the HTML's base URL so they match what the packer will look up.
+  if (htmlBaseContextUrl && parsed.htmlContent) {
+    try {
+      const $ = cheerio.load(parsed.htmlContent);
+      $('style').each((_, el) => {
+        const cssContent = $(el).html();
+        if (!cssContent) return;
+        const discovered = extractUrlsFromCSS(cssContent, htmlBaseContextUrl, logger);
+        for (const newAsset of discovered) {
+          if (!processedOrQueuedUrls.has(newAsset.url)) {
+            processedOrQueuedUrls.add(newAsset.url);
+            assetsToProcess.push(newAsset);
+          }
+        }
+      });
+    } catch (e: any) {
+      logger?.warn(`Could not scan inline <style> blocks for assets: ${e?.message ?? e}`);
     }
   }
 
