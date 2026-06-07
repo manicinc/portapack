@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+# CodeRabbit configuration — https://docs.coderabbit.ai/reference/configuration
+language: en-US
+early_access: false
+
+reviews:
+  # "assertive" gives more thorough, detail-oriented feedback (vs "chill").
+  profile: assertive
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - master
+
+  # Don't waste review effort on generated / vendored / build output.
+  path_filters:
+    - "!dist/**"
+    - "!docs/.vitepress/dist/**"
+    - "!coverage/**"
+    - "!**/*.map"
+    - "!**/*.min.js"
+    - "!**/*.packed.html"
+    - "!package-lock.json"
+
+  # Domain-specific guidance so reviews catch the bugs that actually bite this project.
+  path_instructions:
+    - path: "src/core/**"
+      instructions: >-
+        This is PortaPack's asset-inlining pipeline (parser -> extractor ->
+        packer). Critical invariant: assets are discovered/keyed by their
+        RESOLVED ABSOLUTE URL, but the HTML still references them by their RAW
+        (often relative) href/src attribute values. Any lookup must resolve raw
+        references against the same base URL the extractor used, or inlining
+        silently fails. Flag changes that could reintroduce extraction/packing
+        key mismatches, or that break CSS url() / @font-face inlining or remote
+        (https) page handling.
+    - path: "tests/**"
+      instructions: >-
+        Check that tests assert real behavior and aren't over-mocked to the
+        point of passing vacuously. New behavior should have matching tests.
+    - path: ".github/workflows/**"
+      instructions: >-
+        Releases run via semantic-release on push to master. Watch for changes
+        that could break tagging, npm publish auth, or the version computation.
+
+chat:
+  auto_reply: true
