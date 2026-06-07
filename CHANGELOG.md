@@ -1,18 +1,3 @@
-## [0.5.1](https://github.com/manicinc/portapack/compare/v0.5.0...v0.5.1) (2026-06-07)
-
-
-### Bug Fixes
-
-* **core:** inline CSS, JS, images and fonts for remote pages ([a1475ae](https://github.com/manicinc/portapack/commit/a1475ae777e17956561c0cc557e27863ec6e5c91))
-
-## [0.4.2](https://github.com/manicinc/portapack/compare/v0.4.1...v0.4.2) (2026-06-06)
-
-
-### Bug Fixes
-
-* **core:** inline CSS, JS, images and fonts for remote pages ([a1475ae](https://github.com/manicinc/portapack/commit/a1475ae777e17956561c0cc557e27863ec6e5c91))
-* update application name in desktop release workflow ([47dc96e](https://github.com/manicinc/portapack/commit/47dc96e4a1d92541f498c084af930a41bc2628ef))
-
 ## [0.4.2](https://github.com/manicinc/portapack/compare/v0.4.1...v0.4.2) (2025-06-16)
 
 
