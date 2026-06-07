@@ -1,3 +1,10 @@
+## [0.4.3](https://github.com/manicinc/portapack/compare/v0.4.2...v0.4.3) (2026-06-07)
+
+
+### Bug Fixes
+
+* **core:** inline CSS, JS, images and fonts for remote pages ([a1475ae](https://github.com/manicinc/portapack/commit/a1475ae777e17956561c0cc557e27863ec6e5c91))
+
 ## [0.4.2](https://github.com/manicinc/portapack/compare/v0.4.1...v0.4.2) (2025-06-16)
 
 
