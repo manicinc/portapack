@@ -37,21 +37,28 @@ npm run publish:npm
 
 ## 🔐 GitHub Actions + NPM Setup
 
-### Required Secrets
+### npm Authentication
 
-In your GitHub repository:
+The release job in `.github/workflows/ci.yml` publishes through the package's npm trusted publisher, which names `manicinc/portapack` and `ci.yml`. `@semantic-release/npm` 13 exchanges the job's GitHub OIDC token with the registry and logs `OIDC token exchange with the npm registry succeeded`, so a release needs no npm token. Trusted publishing needs Node 22.14.0 or later and npm 11.5.1 or later, which the release job sets up ([npm: trusted publishing](https://docs.npmjs.com/trusted-publishers)). semantic-release 23 loads `@semantic-release/npm` from its own dependencies before the project's, so `package.json`'s `overrides` give it the version `package.json` names.
 
-1. Go to **Settings > Secrets and variables > Actions**
-2. Add the following secrets:
+In **Settings > Secrets and variables > Actions**:
 
-- `NPM_TOKEN`
-
-  - Create at npmjs.com > Access Tokens
-  - Choose type: `Automation` (read + publish)
-  - Paste into GitHub as `NPM_TOKEN`
+- `NPM_TOKEN` (optional)
+  - A fallback for the release step when the OIDC exchange fails
+  - If set, a granular npm token limited to publishing this package
 
 - `GITHUB_TOKEN`
-  - This is automatically available in GitHub Actions
+  - This is automatically available in GitHub Actions; semantic-release uses it for the release commit, the tag and the GitHub release
+
+To check a release without making one, run the CI workflow by hand with `dry_run` on, on any branch:
+
+```bash
+gh workflow run ci.yml --ref <branch> -f dry_run=true
+```
+
+The `release-dry-run` job runs `semantic-release --dry-run` with no npm token in reach. It checks push access, the OIDC exchange with npm and the commit analysis, and publishes, tags and pushes nothing.
+
+The trusted publisher names no GitHub environment, so anyone with write access to this repository can publish through it. A GitHub environment that admits `master` only, named on the trusted publisher and in the release job, would narrow that to runs on `master`.
 
 ### GitHub Repo Settings
 
@@ -118,8 +125,8 @@ We use Husky + `lint-staged`:
 
 ### Release Fails?
 
-- Check GitHub Actions logs
-- Ensure `NPM_TOKEN` secret is added
+- Check GitHub Actions logs: `@semantic-release/npm` logs whether the OIDC token exchange with the npm registry succeeded, and the status when it failed
+- If the exchange fails, check that the package's trusted publisher on npmjs.com names `manicinc/portapack` and `ci.yml`, then check with a dry run
 - Ensure commit messages follow Conventional Commits
 
 ## ✍️ Recommended Commit Format

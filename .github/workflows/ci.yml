@@ -111,6 +111,14 @@ jobs:
   # --dry-run runs verifyConditions, the commit analysis and the notes, and skips prepare,
   # publish, the tag and every push. --branches names the dispatched branch: on a branch the
   # release config does not name, semantic-release stops before verifyConditions.
+  #
+  # Who can publish: npm's trusted publisher for this package names this file and no
+  # environment, so a run of it from any branch of this repository can make the exchange, and
+  # anyone with write access can start one (a manual run needs write access, and a pushed
+  # branch can change this file first). This job adds no one: npm says as much when the
+  # trusted publisher is created ("Anyone with GitHub repository write access can publish").
+  # A GitHub environment that admits master only, named on the trusted publisher and in the
+  # release job, would narrow it.
   release-dry-run:
     if: github.event_name == 'workflow_dispatch' && inputs.dry_run
     runs-on: ubuntu-latest
