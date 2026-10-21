@@ -24,12 +24,13 @@ import type { CLIResult, BundleOptions, BundleMetadata, CLIOptions } from '../ty
  */
 function getPackageJson(): Record<string, any> {
   try {
-    // Assumes 'portapack' is the package name defined in package.json
-    // We need the package.json itself, so resolve 'portapack/package.json'
+    // dist/cli/cli-entry.cjs (the bin) and src/cli/cli.ts both sit two levels below the
+    // package root. Resolving 'portapack/package.json' through node_modules found it only
+    // when portapack was installed as a dependency, not in a checkout.
     // Use __dirname if available in CJS context, otherwise try relative from cwd as fallback
-    const searchPath =
+    const packageRoot =
       typeof __dirname !== 'undefined' ? path.join(__dirname, '..', '..') : process.cwd();
-    const pkgJsonPath = require.resolve('portapack/package.json', { paths: [searchPath] });
+    const pkgJsonPath = path.join(packageRoot, 'package.json');
     return require(pkgJsonPath); // Use require directly to load JSON
   } catch (err) {
     console.error('Warning: Could not dynamically load package.json for version.', err); // Log error for debugging
@@ -71,9 +72,10 @@ export async function runCli(argv: string[] = process.argv): Promise<CLIResult> 
 
   let cliOptions: CLIOptions | undefined;
   try {
-    // Get the fully parsed options object which includes 'input'
-    cliOptions = parseOptions(argv);
+    // Read the version first: Commander prints it for --version and -V and exits.
     const version = getPackageJson().version || '0.0.0';
+    // Get the fully parsed options object which includes 'input'
+    cliOptions = parseOptions(argv, version);
 
     if (cliOptions.verbose) {
       console.log(`📦 PortaPack v${version}`);
