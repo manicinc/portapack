@@ -78,6 +78,7 @@
     "@commitlint/config-conventional": "^19.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^13.2.0",
     "@types/clean-css": "^4.2.11",
     "@types/html-minifier-terser": "^7.0.2",
     "@types/jest": "^29.5.14",
@@ -110,6 +111,9 @@
     "typedoc-plugin-markdown": "^4.6.0",
     "typescript": "^5.8.2",
     "vitepress": "^1.6.3"
+  },
+  "overrides": {
+    "@semantic-release/npm": "$@semantic-release/npm"
   },
   "config": {
     "commitizen": {
