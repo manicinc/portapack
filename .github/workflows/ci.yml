@@ -5,9 +5,18 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  # A dry run of the release by hand, on any branch: the release-dry-run job below.
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: semantic-release --dry-run with no npm token (publishes, tags and pushes nothing)'
+        type: boolean
+        default: false
 
 jobs:
   build:
+    # A dry run checks the release only; any other run builds and tests.
+    if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -76,16 +85,61 @@ jobs:
       - name: npm 11.20.0 for trusted publishing
         run: npm install -g npm@11.20.0 && npm --version
 
-      # @semantic-release/npm 12 runs npm with preferLocal, so the npm 10.9.2 that npm ci
-      # installs as its dependency (node_modules/.bin/npm) would publish instead of the npm
-      # above, and npm 10 cannot make the OIDC token exchange.
+      # @semantic-release/npm runs npm with preferLocal, so the npm that npm ci installs as its
+      # dependency (node_modules/.bin/npm) would publish instead of the npm above; with this
+      # step the publish uses the pinned 11.20.0.
       - name: Publish with the npm installed above
         run: rm -f node_modules/.bin/npm node_modules/.bin/npx
 
       # The job's own token covers what the release writes here (the tag, the release
       # commit, the GitHub release, its comments); master has no branch protection.
+      # semantic-release looks for each plugin among its own dependencies before the
+      # project's (lib/plugins/utils.js, loadPlugin), and 23.1.1 asks for
+      # @semantic-release/npm ^12, which stops the release without a valid NPM_TOKEN.
+      # package.json's overrides give it the version package.json names: 13.2.0 and later
+      # skip the token once the npm OIDC exchange with the trusted publisher for this file
+      # succeeds, so NPM_TOKEN below is only a fallback.
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VITE_GA_ID: ${{ secrets.GA_ID }}
+
+  # A manual run with dry_run checks a release without making one, on any branch. No npm token
+  # is in reach (NPM_TOKEN is not passed), so @semantic-release/npm passes verifyConditions only
+  # through the OIDC exchange with the trusted publisher for this file. semantic-release
+  # --dry-run runs verifyConditions, the commit analysis and the notes, and skips prepare,
+  # publish, the tag and every push. --branches names the dispatched branch: on a branch the
+  # release config does not name, semantic-release stops before verifyConditions.
+  release-dry-run:
+    if: github.event_name == 'workflow_dispatch' && inputs.dry_run
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      # semantic-release asks the remote whether it may push (git push --dry-run) first.
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - run: npm ci --ignore-scripts
+
+      - name: semantic-release --dry-run with no npm token
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "${NPM_TOKEN:-}" ] || [ -n "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::An npm token is in this step's environment."
+            exit 1
+          fi
+          echo "NPM_TOKEN and NODE_AUTH_TOKEN are not set."
+          npx semantic-release --dry-run --branches "$GITHUB_REF_NAME"

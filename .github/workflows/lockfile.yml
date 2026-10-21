@@ -1,0 +1,49 @@
+name: Lockfile
+
+# Resolves the dependency ranges in package.json into package-lock.json and offers it as an
+# artifact: dependencies are never installed on a developer's machine. GitHub dispatches a
+# workflow only once its file is on the default branch or has run, so a push to another
+# branch that changes package.json runs it too. By hand, on any branch:
+#
+#   gh workflow run lockfile.yml -R manicinc/portapack --ref <branch>
+#   gh run download <run-id> -R manicinc/portapack -n package-lock
+#
+# then commit package-lock.json to the branch. The job reads the repository and writes nothing.
+
+on:
+  push:
+    branches-ignore:
+      - master
+      - 'dependabot/**'
+    paths:
+      - package.json
+      - .github/workflows/lockfile.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resolve:
+    name: Resolve the lockfile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      # --package-lock-only writes package-lock.json without node_modules or scripts.
+      - name: Resolve
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Upload the lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-lock
+          path: package-lock.json
+          if-no-files-found: error
