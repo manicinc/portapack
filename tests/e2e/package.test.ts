@@ -21,6 +21,21 @@ function requireBuild(): void {
   }
 }
 
+/**
+ * Runs npm. On Windows npm is a .cmd shim, which execFileSync cannot start without a shell,
+ * so where npm started the tests (npm test sets npm_execpath to npm-cli.js) its CLI script
+ * runs under this Node instead.
+ */
+function npm(args: string[]): string {
+  const cli = process.env.npm_execpath;
+  const viaNode = cli !== undefined && /npm-cli\.c?js$/.test(cli);
+  return execFileSync(viaNode ? process.execPath : 'npm', viaNode ? [cli, ...args] : args, {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+}
+
 describe('the built CLI', () => {
   it.each(['--version', '-V'])('prints the version in package.json for %s', flag => {
     requireBuild();
@@ -36,11 +51,7 @@ describe('the built CLI', () => {
 describe('the packed package', () => {
   it('holds dist, package.json, the README and the licence, and every entry point', () => {
     requireBuild();
-    const out = execFileSync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], {
-      cwd: root,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
+    const out = npm(['pack', '--dry-run', '--json', '--ignore-scripts']);
     const [packed] = JSON.parse(out.slice(out.search(/^\[/m)));
     const files: string[] = packed.files.map((file: { path: string }) => file.path);
 
@@ -50,7 +61,10 @@ describe('the packed package', () => {
 
     const entryPoints = [manifest.main, manifest.module, manifest.types, manifest.bin.portapack];
     expect(files).toEqual(
-      expect.arrayContaining(entryPoints.map((entry: string) => path.posix.normalize(entry)))
+      expect.arrayContaining([
+        ...topLevel,
+        ...entryPoints.map((entry: string) => path.posix.normalize(entry)),
+      ])
     );
   });
 });
