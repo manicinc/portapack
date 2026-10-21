@@ -33,15 +33,16 @@ function parseRecursiveValue(val: string | undefined): boolean | number {
  * Ensures flags like --no-embed-assets correctly override their positive counterparts.
  *
  * @param {string[]} [argv=process.argv] - Command-line arguments array (e.g., process.argv).
+ * @param {string} [version='0.0.0'] - What --version and -V print; cli.ts passes package.json's.
  * @returns {CLIOptions} Parsed and structured options object.
  * @throws {Error} Throws errors if Commander encounters parsing/validation issues.
  */
-export function parseOptions(argv: string[] = process.argv): CLIOptions {
+export function parseOptions(argv: string[] = process.argv, version = '0.0.0'): CLIOptions {
   const program = new Command();
 
   program
     .name('portapack')
-    .version('0.0.0') // Version updated dynamically by cli.ts
+    .version(version)
     .description('📦 Bundle HTML and its dependencies into a portable file')
     .argument('[input]', 'Input HTML file or URL')
     .option('-o, --output <file>', 'Output file path')

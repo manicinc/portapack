@@ -123,7 +123,7 @@ describe('CLI Runner Logic', () => {
     await runCli(testArgs);
 
     expect(mockParseOptions).toHaveBeenCalledTimes(1);
-    expect(mockParseOptions).toHaveBeenCalledWith(testArgs);
+    expect(mockParseOptions).toHaveBeenCalledWith(testArgs, packageJson.version);
     // Verify pack was called because parseOptions returned valid input and not dry-run
     expect(mockPackFn).toHaveBeenCalledTimes(1);
     // Check if pack was called with the correct arguments derived from options
@@ -153,7 +153,7 @@ describe('CLI Runner Logic', () => {
     const result = await runCli(args);
 
     // Check that parseOptions was called
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     // Check pack was called correctly
     expect(mockPackFn).toHaveBeenCalledTimes(1);
     expect(mockPackFn).toHaveBeenCalledWith(mockCliOptions.input, mockCliOptions); // Called with input and options object
@@ -190,7 +190,7 @@ describe('CLI Runner Logic', () => {
 
     const result = await runCli(args);
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     // Check pack was called
     expect(mockPackFn).toHaveBeenCalledTimes(1);
     expect(mockPackFn).toHaveBeenCalledWith(mockCliOptions.input, mockCliOptions);
@@ -224,7 +224,7 @@ describe('CLI Runner Logic', () => {
 
     const result = await runCli(args);
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     // Check pack was called
     expect(mockPackFn).toHaveBeenCalledTimes(1);
     expect(mockPackFn).toHaveBeenCalledWith(mockCliOptions.input, mockCliOptions);
@@ -248,7 +248,7 @@ describe('CLI Runner Logic', () => {
 
     const result = await runCli(args);
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     // Check for early exit
     expect(result.exitCode).toBe(1);
     expect(result.stderr).toContain('❌ Missing input file or URL');
@@ -268,7 +268,7 @@ describe('CLI Runner Logic', () => {
 
     const result = await runCli(args);
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     // Ensure pack and writeFile were not called due to dry run
     expect(mockPackFn).not.toHaveBeenCalled();
     expect(writeFileSyncSpy).not.toHaveBeenCalled();
@@ -286,7 +286,7 @@ describe('CLI Runner Logic', () => {
 
     const result = await runCli(args);
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     expect(mockPackFn).toHaveBeenCalledTimes(1); // Ensure pack was called
     // Check for error exit code and message
     expect(result.exitCode).toBe(1);
@@ -311,7 +311,7 @@ describe('CLI Runner Logic', () => {
 
     const result = await runCli(args);
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     expect(mockPackFn).toHaveBeenCalledTimes(1);
     expect(writeFileSyncSpy).toHaveBeenCalledTimes(1); // Verify write still happens
     expect(writeFileSyncSpy).toHaveBeenCalledWith('output.html', '<html>Warning</html>', 'utf-8');
@@ -344,7 +344,7 @@ describe('CLI Runner Logic', () => {
 
     const expectedVersionString = `📦 PortaPack v${packageJson.version}`; // Get version dynamically
 
-    expect(mockParseOptions).toHaveBeenCalledWith(args);
+    expect(mockParseOptions).toHaveBeenCalledWith(args, packageJson.version);
     expect(mockPackFn).toHaveBeenCalledTimes(1);
     expect(writeFileSyncSpy).toHaveBeenCalledTimes(1); // Write should still occur
 

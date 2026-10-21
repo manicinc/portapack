@@ -55,21 +55,37 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      # npm trusted publishing exchanges this job's OIDC token for a publish token.
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Trusted publishing needs Node 22.14.0 or later and npm 11.5.1 or later
+      # (https://docs.npmjs.com/trusted-publishers).
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
           cache: 'npm'
 
       - run: npm ci
       - run: npm run build
+
+      - name: npm 11.20.0 for trusted publishing
+        run: npm install -g npm@11.20.0 && npm --version
+
+      # @semantic-release/npm 12 runs npm with preferLocal, so the npm 10.9.2 that npm ci
+      # installs as its dependency (node_modules/.bin/npm) would publish instead of the npm
+      # above, and npm 10 cannot make the OIDC token exchange.
+      - name: Publish with the npm installed above
+        run: rm -f node_modules/.bin/npm node_modules/.bin/npx
+
+      # The job's own token covers what the release writes here (the tag, the release
+      # commit, the GitHub release, its comments); master has no branch protection.
       - run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           VITE_GA_ID: ${{ secrets.GA_ID }}

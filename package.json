@@ -9,6 +9,9 @@
   "bin": {
     "portapack": "./dist/cli/cli-entry.cjs"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "concurrently --success=all -n BUILD,DOCS,TEST -c green,blue,magenta \"npm run dev:build\" \"npm run dev:docs\" \"npm run dev:test\"",
     "dev:build": "tsup --watch",
