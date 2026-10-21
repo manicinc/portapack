@@ -1,3 +1,11 @@
+## [0.4.4](https://github.com/manicinc/portapack/compare/v0.4.3...v0.4.4) (2026-10-21)
+
+
+### Bug Fixes
+
+* **cli:** --version and -V print the package version, not 0.0.0 ([82bf2d9](https://github.com/manicinc/portapack/commit/82bf2d99a9f53af293714f274156827aa2bda2d6))
+* **package:** publish dist, package.json, the README and the licence only ([9b6cb7e](https://github.com/manicinc/portapack/commit/9b6cb7e05a7463a344c2ecc643be95077f2d5fba))
+
 ## [0.4.3](https://github.com/manicinc/portapack/compare/v0.4.2...v0.4.3) (2026-06-07)
 
 
